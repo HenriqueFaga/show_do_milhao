@@ -1,0 +1,288 @@
+1 - Criando um servidor com Node:
+    
+    - Criar um arquivo index.js
+    - colocar o conteudo:
+        var http = require('http')
+
+        http.createServer(function(rec, res){
+            res.end('Gerenciador Financeiro')
+        }).listen(8080)
+
+    - iniciar no terminal o arquivo index com o comando: node index.js
+    - No Windows, exige permissao
+    - depois colocar no chromer localhost:8080
+
+2 - Criando Rotas com Express:
+    rotas sao caminhos (localhost:8080/empresas ou localhost:8080/blog)
+
+    instalando no terminal:
+    $ npm install express --save
+
+    Na pasta que criou seu Servidor, ele baixara todos os modulos do express
+    - pasta: node_modules
+    - arquivo: package-jason
+
+    no index.js:
+
+        // Aqui pegamos o modulo Express dentro do diretorio
+        // node_modules (Ele ja reconhece que esta dentro dessa pasta)
+        const express = require('express')
+
+        // instanciar o express em uma const para nao pode alterar
+        const app = express()
+
+        // Pagina que eu quero Abrir
+        // "/" para pagina Raiz
+        // funcionara no caminho localhost:8080/
+        app.get("/", function(req, res){
+            res.send("Gerenciador de Servidor")
+        })
+
+        // localhost:8080/contato
+        // Funciona como um apache
+        app.get("/contato", function(req, res){
+            res.send("Contaaatos")
+        })
+        // Escutando a porta 8080
+        app.listen(8080);
+
+3 - Nodemon: Para reiniciar o servidor automaticamente.
+
+    npm install -g nodemon
+
+    para excecutar: nodemon index.js
+
+4 - Colocando um arquivo HTML
+    
+    Utilizamos o sendFile e o caminho absoluto:
+        app.get("/", function(req, res){
+            res.sendFile("C:/Users/henri/Documents/js/node/src/show.html")
+        })
+
+    Ou simplesmente o __dirname
+
+        app.get("/", function(req, res){
+            res.sendFile(__dirname + "/src/show.html")
+        })
+
+5 - Instalar o Banco Mysql:
+
+    Site do Mysql -> Download -> MySQL Community (GPL) Downloads » -> MySQL Community Server
+
+    Na instalacao -> Servidor only
+
+    Depois de instalar, copiar o caminho do mysql/bin : (C:\Program Files\MySQL\MySQL Server 8.0\bin)
+        Vai no meu Computador, propriedades, Configuracoes avancadas, variaveis de ambiente, clicar
+        em PATH, Editar e colar o caminho do mysql/bin
+
+    - Comando para acessar o Banco:
+        mysql -h localhost -u root -p (password:123123123)
+
+
+    - QUERYS:
+
+        SHOW DATABASES;
+
+        CREATE DATABASE show_do_milhao;
+
+        USE show_do_milhao;
+
+        CREATE TABLE usuarios(id_usuario INT PRIMARY KEY AUTO_INCREMENT, nome VARCHAR(220), email VARCHAR(220), senha VARCHAR(200));
+
+        SHOW TABLES;
+
+        INSERT INTO usuarios(nome, email, senha) VALUES ('henrique', 'henrique@henrique.com', 123123123);
+
+        SELECT * FROM usuarios;
+
+        CREATE USER 'henrique'@'localhost' IDENTIFIED WITH mysql_native_password BY '123456';
+
+        GRANT ALL PRIVILEGES ON * . * TO 'henrique'@'localhost';
+
+        CREATE TABLE perguntas(id_pergunta INT PRIMARY KEY AUTO_INCREMENT, pergunta VARCHAR(220), resp_correta VARCHAR(220), resp_incorreta_1 VARCHAR(220), resp_incorreta_2 VARCHAR(220), resp_incorreta_3 VARCHAR(220), dificuldade INT);
+
+        INSERT INTO perguntas(pergunta, resp_correta, resp_incorreta_1, resp_incorreta_2, resp_incorreta_3, dificuldade) VALUES ('QUANTOS CORACOES UM POLVO TEM?', '3', '5', '2', '4', 2);
+
+    Instalando o mysql no projeto(criando o package.json):
+
+        npm init
+        <Enter> em tudo
+
+        npm install mysql --save (para salvar no package)
+
+    Conexao com BD e o app.js
+
+        // Conexao com o banco
+        // devemos criar um usuario no banco, pois nao pode conectar como root
+        const mysql = require('mysql')
+        const connection = mysql.createConnection({
+          host     : 'localhost',
+          user     : 'henrique',
+          password : '123456',
+          database : 'show_do_milhao'
+        });
+
+
+        connection.connect(function(err) {
+          if (err) {
+            console.error('error connecting: ' + err.stack);
+            return;
+          }
+          console.log('connected as id ' + connection.threadId);
+        });
+
+        // Executando uma Query quando iniciamos o app.js
+        connection.query('SELECT * FROM usuarios;', function(err, rows, fields){
+            if(!err){
+                console.log('Resultado:', rows)
+            }
+            else{
+                console.log('Erro ao pegar os resultados!')
+            }
+        })
+
+6 - Update pelo node:
+
+    connection.query("UPDATE usuarios SET nome='Rosangela', email='rosangela@rosangela.com' WHERE id_usuario = 4;", function(err, result){
+        if(!err){
+            console.log('Atualizado com sucesso!')
+            console.log('Resultado:', result)
+        }
+        else{
+            console.log('Erro ao Atualizar!', result)
+        }
+    })
+
+7 - DELETE FROM pelo node e realizado da mesma forma
+
+8 - Node.js #11 - Como instalar e usar o Sequelize no Node.js
+    Usado para mysql, postgres, sqlite e outros.
+
+    - No diretorio do meu projeto instalar:
+    npm install --save sequelize
+
+    - Instalar para o mysql:
+    npm install --save mysql2
+
+    // instanciando o Sequelize (interacao com o MYSQL)
+    const Sequelize = require('sequelize')
+
+    // crio o objeto Squelize
+    const sequelize = new Sequelize('show_do_milhao', 'henrique', '123456', {
+        host: 'localhost',
+        dialect: 'mysql'
+    })
+
+    // Se a conecxao foi bem sucedida (then), se nao (catch)
+    sequelize.authenticate().then(function(){
+        console.log('Conectado no Banco com Sucesso!')
+    }).catch(function(err){
+        console.log('Erro ao conectar com o Banco: ', err)
+    })
+
+    // Criando uma Tabela:
+    const User = sequelize.define('user', {
+      // attributes
+      firstName: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      lastName: {
+        type: Sequelize.STRING
+        // allowNull defaults to true
+      }
+    });
+    User.sync({force:true});
+
+    -- Depois de criada a tabela, comente User.sync({force:true}); para realizar
+    -- a insercao de dados, se nao da erro
+
+    // Inserir dados
+    User.create({
+        firstName: 'Teste',
+        lastName: '222'
+    })
+
+9 - Node.js #12 - Como instalar o Handlebars no Node e criar o layout padrão para o projeto
+
+    - Para o express:
+    npm install --save express-handlebars
+
+    - Instanciar
+
+    - Criar uma Pasta views/layouts/
+    - e criar um arquivo com .handlesbar
+    - criar arquivo pagamento.handlebars na /views
+
+    // Aqui pegamos o modulo Express dentro do diretorio
+    // node_modules (Ele ja reconhece que esta dentro dessa pasta)
+    const express = require('express')
+
+    // instancia do handlebars
+    const handlebars = require('express-handlebars')
+
+    // instanciar o express em uma const para nao pode alterar
+    const app = express()
+
+    // Incluir a Pagina handlebars, carregando o default layout
+    app.engine('handlebars', handlebars({defaultLayout : 'teste'}))
+    app.set('view engine', 'handlebars')
+
+    // Ficara dentro do {{{body}}}
+    // Criando a Rota para renderizar pagamento.handlebars
+    app.get('/pagamento', function (req, res) {
+        res.render('pagamento')
+    })
+
+    // Criando a Rota
+    app.get('/teste', function (req, res) {
+        res.send('Formulario')
+    })
+
+    // Escutando a porta 8080
+    app.listen(8080);
+
+
+10 - Socket.io para multiplayer
+    npm install --save socket.io
+
+    no app.js
+
+    // Conf. para o Socket.io
+    const server = require('http').createServer(app)
+    const io = require('socket.io')(server)
+    io.on('connection', socket => {
+        console.log(`Socket conectado! ${socket.id}`)
+    })
+
+    // e trocar o app por sever no listen
+    server.listen(8080);
+
+    // No arquivo chat colocamos o script para fazer a ligacao com o socket
+    <script type="text/javascript">
+        var socket = io('http://localhost:8080')
+    </script> 
+
+    2 - Ficou no servidor:
+
+    // Conf. para o Socket.io
+    const server = require('http').createServer(app)
+    const io = require('socket.io')(server)
+
+    // Array para armazenar mensagens do Chat
+    let messages = []
+    io.on('connection', socket => {
+        console.log(`Socket conectado! ${socket.id}`)
+
+        socket.emit('previousMessages', messages)
+
+        socket.on('sendMessage', data => {
+            console.log(data)
+            messages.push(data)
+            socket.broadcast.emit('receivedMessage', data)
+        })
+    })
+
+
+
+

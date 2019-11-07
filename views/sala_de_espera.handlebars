@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
+    <title>Sala de Espera</title>
+</head>
+<body>
+    Esperando.. <div name="usuario_2"></div>
+    <script type="text/javascript">
+        var socket = io('http://localhost:8080')
+        var estou_aqui = {agora: 'true'}
+        socket.emit('Estou_aqui', estou_aqui)
+        socket.on('todos_conectados', function(){
+            console.log('sadasdasdasdas')
+            window.location = "inicio_show_multi"
+        })
+    </script>
+</body>
+</html>

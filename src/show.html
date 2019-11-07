@@ -1,0 +1,109 @@
+<html>
+<head>
+    <title>Show do Milhão</title>
+    <link rel="stylesheet" type="text/css" href="css/show.css">
+    <script type="text/javascript" src="js/show.js"></script>
+</head>
+<body align="center">
+    <form id='proxima' action="">
+    <div class="topo" align="center">
+        <div class="menu">
+            <div class="moedas" id="moedas" name="moedas" value="100"><strong><font id="dinheiro_visivel" color="white">100</font><img class="moeda" src="imagens/moeda.png" height="50px" width="50px"></strong>
+            </div>
+        </div>
+    </div>
+    <div class="menu_espaco"></div>
+    <!-- Quadro de Pergunte e Respostas -->
+    <div class="quadro_principal" id="quadro_principal" align="center">
+        <div class="bloco" align="right">
+            <div class="quadro_pergunta" align="center">
+                <input type="hidden" id="dificuldade" name="dificuldade" value="1">
+                <div class="pergunta">QUAL É A CAPITAL DOS ESTADOS UNIDOS?</div>
+                <div class="espacamento" id="alt"></div>
+                <div class="resposta" id="resp_1" value="false" onclick="mouse_click(this)">NOVA YORK</div>
+                <div class="espacamento"></div>
+                <div class="resposta" id="resp_2" value="false" onclick="mouse_click(this)">MIAMI</div>
+                <div class="espacamento"></div>
+                <div class="resposta" id="resp_3" value="false" onclick="mouse_click(this)">CHICAGO</div>
+                <div class="espacamento"></div>
+                <div class="resposta" id="resp_4" value="true" onclick="mouse_click(this)">WASHINGTON</div>
+                <div class="espacamento"></div>
+                <div class="dinheiro"><font size="5"><strong>10 Mil</strong></font></div>
+            </div>
+        </div>    
+            <div class="bloco">    
+                <div class="quadro_2" align="left">
+                    <div class="quadro_ajuda">
+                        <div class="ajuda" id="cartas" value="0" onclick="mouse_click_ajuda(this.id)" align="center">
+                            CARTAS<img src="imagens/cards.png" height="50px" width="50px">
+                            <div class="padding_vertical"><div class="valor_ajuda">$100</div></div>
+                        </div>
+                        <div class="espacamento_horizonzal"></div>
+                        <div class="ajuda" id="plateia" value="1" onclick="mouse_click_ajuda(this.id)" align="center">
+                            PLATEIA<img src="imagens/audience.png" height="50px" width="50px">
+                            <div class="padding_vertical"><div class="valor_ajuda">$50</div></div>
+                        </div>
+                        <div class="espacamento_horizonzal"></div>
+                        <div class="ajuda" id="uni" value="2" onclick="mouse_click_ajuda(this.id)" align="center">
+                            UNI.<img src="imagens/college.png" height="50px" width="50px">
+                            <div class="padding_vertical"><div class="valor_ajuda">$50</div></div>
+                        </div>
+                        <div class="espacamento_horizonzal"></div>
+                        <div class="ajuda" id="pular" value="3" onclick="mouse_click_ajuda(this.id)" align="center">
+                            PULAR<img src="imagens/jump.png" height="50px" width="50px">
+                            <div class="padding_vertical"><div class="valor_ajuda">$50</div></div>
+                        </div>
+                    </div>
+                    <div class="espacamento_branco"></div>
+                    <div class="interativa">
+                        <div id="escolhe_carta" style="display: none;">
+                            <!-- Aqui ficará as Cartas! -->
+                            <p align="center"><strong>ESCOLHA UMA CARTA:</strong></p>
+                            <img height="170" class="desabilita_img" id="carta1" width="128px" src="imagens/traz.png" onclick="mouse_click_carta(this.id)">
+                            <img height="170" class="desabilita_img" id="carta2" width="128px" src="imagens/traz.png" onclick="mouse_click_carta(this.id)">
+                            <img height="170" class="desabilita_img" id="carta3" width="128px" src="imagens/traz.png" onclick="mouse_click_carta(this.id)">
+                            <img height="170" class="desabilita_img" id="carta4" width="128px" src="imagens/traz.png" onclick="mouse_click_carta(this.id)">
+                        </div>
+                        <div id="porcento_plateia" style="display: none;">
+                            <!-- Aqui ficará a Plateia! -->
+                            <p align="center"><strong>Escolhas por Porcentagem:</strong></p>
+                            <p id="plateia_resp_1" align="center"></p>
+                            <p id="plateia_resp_2" align="center"></p>
+                            <p id="plateia_resp_3" align="center"></p>
+                            <p id="plateia_resp_4" align="center"></p>
+                        </div>
+                        <div id="resposta_universitario" align="center" style="display: none;">
+                            <!-- Aqui ficará os Universitarios! -->
+                            <p align="center"><strong>Escolhas dos Universitários:</strong></p>
+                            <div class="uni_img" align="center">
+                                <img height="170" width="128px" src="imagens/bone.png">
+                                <p class="alternativa" id="uni_resp_1" align="center"></p>
+                            </div>
+                            <div class="uni_img" align="center">
+                                <img height="170" width="128px" src="imagens/mestre.png">
+                                <p class="alternativa" id="uni_resp_2" align="center"></p>
+                            </div>
+                            <div class="uni_img" align="center">
+                                <img height="170" width="150px" src="imagens/senhorbarba.png">
+                                <p class="alternativa" id="uni_resp_3" align="center"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="espacamento_branco"></div>
+                    <div class="quadro_parar" align="center">
+                        <div class="parar" align="center" onclick="funcao_parar()"><font color="black">PARAR</font></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="charme_acertou" id="charme_acertou" align="center" style="display: none;">
+            <div id="charme_certo_ou_errado"></div>
+            </br>
+            <div id="charme_resposta"></div>
+            </br>
+            <div id="proxima_etapa" style="display: none;" onclick="submit_form()">Pr&oacute;xima Pergunta >></div>
+            <div id="errou_voltar" style="display: none;" onclick="voltar_menu()">Voltar</div>
+        </div>
+    </form>
+</body>
+</html>

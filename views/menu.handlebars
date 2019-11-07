@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Menu - Show do Vitao</title>
+    <style type="text/css">
+        div.tela_login{
+            float:center;
+            width: 400px;
+            height: 230px;
+            border: solid;
+            border-radius: 10px;
+            padding: 35px;
+            padding-top: 15px;
+            padding-bottom: 25px;
+            border-width: 2px;
+            border-color:gray;
+            border-style: solid;
+            text-decoration-style: 2px;
+            font-weight:bold;
+        }
+        body{
+            text-align: center;
+            font-family: sans-serif;
+        }
+        div.texto{
+            padding: 10px;
+            font-size: 20px;
+        }
+        div.alinhamento_login{
+            padding-top: 50px;
+        }
+        div.titulo{
+            padding: 50px;
+            padding-top: 10px;
+            font-size: 50px;
+            color:#00b3b3;
+        }
+    </style>
+    <script type="text/javascript">
+        function jogar_sozinho(){
+            window.location = 'inicio_show'
+        }
+        function jogar_2(){
+            f = document.getElementById('form_menu')
+            f.setAttribute('action',"inicio_show_multi");
+            f.submit()
+        }
+        function comprar(){
+            window.location = 'sala_de_espera'
+        }
+    </script>
+</head>
+<body align="center">
+    <form id="form_menu" method=POST" action="">
+    {{#with dados}}
+    <input type="hidden" name="id_usuario" value="{{id_usuario}}">
+    {{/with}}
+    </form>
+    <div class="alinhamento_login">
+        <div class="titulo">
+            <h1><span class="badge badge-pill badge-primary">SHOW DO VIT&Atilde;O</span></h1>
+        </div>
+        <div class="d-flex justify-content-center">
+            <div class="tela_login" align="center">
+                <button class="btn btn-primary btn-lg btn-block" type="button" onclick="jogar_sozinho()">Jogar Sozinho</button>
+                </br>
+                <button class="btn btn-primary btn-lg btn-block" type="button" onclick="jogar_2()">Jogar 1 vs 1</button>
+                </br>
+                <button class="btn btn-warning btn-lg btn-block" type="button" onclick="comprar()">Comprar Moedas</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
