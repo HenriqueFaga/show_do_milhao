@@ -1,0 +1,266 @@
+body{
+    text-align: center;
+    font-family: sans-serif;
+}
+div.quadro_principal{
+    /*width: 1200px;*/            
+}
+div.topo{
+   /*float:left; */
+}
+div.bloco{
+    /*position: absolute;*/
+    float:left;
+    width: 48%;
+    /*width: 1000px;*/
+}
+div.menu_espaco{
+    /*position: absolute;*/
+    /*float:left;*/
+    height:25px;
+    background-color:white;
+}
+div.menu{
+    /*position: absolute;*/
+    /*float:left;*/
+    padding: 10px;
+    /*height:40px;*/
+    width:1400px;
+    background-color:purple;
+}
+div.moedas{
+    float:top;
+    /*height:25px;*/
+    object-fit: cover; 
+    width:100px;
+    /*padding: 10px;*/
+    border-radius: 5px;
+    background-color:black;
+    text-decoration-color: white;
+}
+div.quadro_pergunta{
+    /*position: absolute;*/
+    /*float:left;*/
+    padding: 25px;
+    width:400px;
+    border-radius: 10px;
+    border-width: 2px;
+    border-color:#000000;
+    border-style: solid;
+    align-content: left;
+    background-color:#e5ffff;
+}
+div.pergunta{
+    /*definimos a largura do box*/
+    width:340px;
+    /* definimos a altura do box */
+    /*height:100px;*/
+    /* definimos a cor de fundo do box */
+    background-color:#bf80ff;
+    /* definimos o quão arredondado irá ficar nosso box */
+    border-radius: 10px 20px;
+    /* cor de borda*/
+    border-color: black;
+    /* definimos a borda interna */
+    padding: 25px;
+    font-weight:bold;
+}
+div.resposta{
+    /*definimos a largura do box*/
+    width:300px;
+    /* definimos a altura do box */
+    /*height:100px;*/
+    /* definimos a cor de fundo do box */
+    background-color:#6495ed;
+    /* definimos o quão arredondado irá ficar nosso box */
+    border-radius: 10px;
+    /* borda interna*/
+    padding: 25px;
+    text-decoration-style: 2px;
+    font-weight:bold;
+}
+div.resposta:hover{cursor: pointer;}
+div.resposta:hover{background-color: #ffff66;}
+div.espacamento{
+    /*definimos a largura do box*/
+    width:400px;
+    /* definimos a altura do box */
+    height:20px;
+    background-color:#e5ffff;
+}
+div.espacamento_branco{
+    float:left;
+    /*definimos a largura do box*/
+    width:400px;
+    /* definimos a altura do box */
+    height:10px;
+}
+div.numero{
+    /*definimos a largura do box*/
+    width:50px;
+    /* definimos a altura do box */
+    height:50px;
+    border-radius: 50px;
+    /*padding-top: 10px;*/
+    background-color:#6495ed;
+    /*background-color:white;*/
+}
+
+div.dinheiro{
+    /*definimos a largura do box*/
+    width:60px;
+    /* definimos a altura do box */
+    /*height:30px;*/
+    /* definimos a cor de fundo do box */
+    background-color:#ffff80;
+    border-color:#000000;
+    border-style: solid;
+    border-width: 1px;
+    /* borda interna*/
+    padding: 25px;
+}
+div.quadro_2{
+    /*position: absolute;*/
+    float:left;
+    padding-left:10px;
+    padding-bottom:10px;
+/*            width:300px;
+    height: 600px;*/
+    /*align-content: left;*/
+    /*height:400px;*/
+    /*width:450px;*/
+}
+div.quadro_ajuda{
+    /*position: absolute;*/
+    float:left;
+    padding:10px;
+    /*width:450px;*/
+    background-color:#fff9e5;
+    border-radius: 10px;
+    border-width: 2px;
+    border-color:#000000;
+    border-style: solid;
+    align-content: left;
+}
+div.ajuda{
+    /*position: absolute;*/
+    float:left;
+    padding:25px;
+    padding-bottom:5px;
+    width:70px;
+    border-radius: 10px;
+    border-width: 2px;
+    border-color:#000000;
+    border-style: solid;
+    background-color:#f2b90d;
+    font-weight:bold;
+}
+div.ajuda:hover{background-color: #ffff66;}
+div.espacamento_horizonzal{
+    float:left;
+    /*definimos a largura do box*/
+    width:10px;
+    /* definimos a altura do box */
+    height:10px;
+    background-color:#fff9e5;
+}
+div.interativa{
+    /*position: absolute;*/
+    float:left;
+    width: 528px;
+    height: 380px;
+    padding:10px;
+    background-color:#fff9e5;
+    border-radius: 10px;
+    border-width: 2px;
+    border-color:#000000;
+    border-style: solid;
+    /*align-content: left;*/
+}
+div.uni_img{
+    width: 170px;
+    float:left;
+}
+p.alternativa{
+    font-weight:bold;
+    color: green;
+}
+img.moeda{
+    position: absolute;
+    margin-top:-15px
+}
+div.quadro_parar{
+    float:left;
+    width:540px;
+}
+div.parar{
+    /*definimos a largura do box*/
+    /*float:left;*/
+    width:150px;
+    /* definimos a altura do box */
+    /*height:50px;*/
+    /* definimos a cor de fundo do box */
+    background-color:#ff3333;
+    /* definimos o quão arredondado irá ficar nosso box */
+    border-radius: 10px;
+    /* borda interna*/
+    padding: 8px;
+    border-width: 2px;
+    border-color:#000000;
+    border-style: solid;
+    text-decoration-style: 2px;
+    font-weight:bold;
+}
+div.parar:hover{cursor: pointer;}
+div.parar:hover{background-color: #ffff66;}
+div.valor_ajuda{
+    color: green;
+    border-radius: 10px;
+    background-color: #33ff33;
+    border-width: 2px;
+    border-style: solid;
+    /*padding: 0;*/
+}
+div.padding_vertical{
+    padding-top: 7px;
+}
+div.charme_acertou{
+    /*width: 100px;*/
+    float:center;
+    height: 300px;
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    padding: 90px;
+}
+div#charme_certo_ou_errado{
+    color:white;
+    font-size: 45px;
+}
+div#proxima_etapa{
+    width: 200px;
+    /*height: 30px;*/
+    background-color: #00cc44;
+    font-size: 20px;
+    /*color:white;*/
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    padding: 20px;
+}
+div#proxima_etapa:hover{cursor: pointer;}
+div#proxima_etapa:hover{background-color: #ffff66;}
+
+div#errou_voltar{
+    width: 90px;
+    /*height: 30px;*/
+    background-color: #ff9966;
+    font-size: 20px;
+    /*color:white;*/
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    padding: 20px;
+}
+div#errou_voltar:hover{cursor: pointer;}
+div#errou_voltar:hover{background-color: #ffff66;}
