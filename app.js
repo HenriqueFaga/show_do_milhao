@@ -477,10 +477,10 @@ app.get('/show_multi', function (req, res) {
     })
 })
 
-// funcionara no caminho localhost:8080/
-// app.get("/show.html", function(req, res){
-//     res.sendFile(__dirname + "/src/show.html")
-// })
+funcionara no caminho localhost:8080/
+app.get("/show.html", function(req, res){
+    res.sendFile(__dirname + "/src/show.html")
+})
 app.get("/menu.html", function(req, res){
     res.sendFile(__dirname + "/src/menu.html")
 })
