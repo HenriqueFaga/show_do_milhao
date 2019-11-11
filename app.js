@@ -165,21 +165,20 @@ app.post('/add-cadastro', function (req, res) {
     res.redirect('/login');
 })
 
-var req.session.lista_perguntas_individual = []
-// var req.session.pergunta_individual_momento = 0
+var lista_perguntas_individual = []
+var pergunta_individual_momento = 0
 
 // MENU
 app.get('/menu', function (req, res) {
     // zeramos a pergunta do momento quando voltamos pro menu
-    req.session.pergunta_individual_momento = 0
+    pergunta_individual_momento = 0
     res.render('menu')
 })
 
 // Inicio Show
 app.get('/inicio_show', function (req, res) {
     // zeramos a pergunta do momento quando voltamos pro menu
-    req.session.lista_perguntas_individual = []
-    req.session.pergunta_individual_momento = 0
+    pergunta_individual_momento = 0
     perguntas.findAll({
         // attributes: [[sequelize.fn('COUNT', sequelize.col('dificuldade')), 'dificuldade']],
         where:{
@@ -189,9 +188,9 @@ app.get('/inicio_show', function (req, res) {
         limit : 3
     }).then(function(dificuldade){
         console.log(dificuldade)
-        req.session.lista_perguntas_individual[0] = dificuldade[0]['dataValues']['id']
-        req.session.lista_perguntas_individual[1] = dificuldade[1]['dataValues']['id']
-        req.session.lista_perguntas_individual[2] = dificuldade[2]['dataValues']['id']
+        lista_perguntas_individual[0] = dificuldade[0]['dataValues']['id']
+        lista_perguntas_individual[1] = dificuldade[1]['dataValues']['id']
+        lista_perguntas_individual[2] = dificuldade[2]['dataValues']['id']
     })
     perguntas.findAll({
     // attributes: [[sequelize.fn('COUNT', sequelize.col('dificuldade')), 'dificuldade']],
@@ -202,9 +201,9 @@ app.get('/inicio_show', function (req, res) {
         limit : 3
     }).then(function(dificuldade){
         console.log(dificuldade)
-        req.session.lista_perguntas_individual[3] = dificuldade[0]['dataValues']['id']
-        req.session.lista_perguntas_individual[4] = dificuldade[1]['dataValues']['id']
-        req.session.lista_perguntas_individual[5] = dificuldade[2]['dataValues']['id']
+        lista_perguntas_individual[3] = dificuldade[0]['dataValues']['id']
+        lista_perguntas_individual[4] = dificuldade[1]['dataValues']['id']
+        lista_perguntas_individual[5] = dificuldade[2]['dataValues']['id']
     })
     perguntas.findAll({
     // attributes: [[sequelize.fn('COUNT', sequelize.col('dificuldade')), 'dificuldade']],
@@ -215,10 +214,10 @@ app.get('/inicio_show', function (req, res) {
         limit : 4
     }).then(function(dificuldade){
         console.log(dificuldade)
-        req.session.lista_perguntas_individual[6] = dificuldade[0]['dataValues']['id']
-        req.session.lista_perguntas_individual[7] = dificuldade[1]['dataValues']['id']
-        req.session.lista_perguntas_individual[8] = dificuldade[2]['dataValues']['id']
-        req.session.lista_perguntas_individual[9] = dificuldade[3]['dataValues']['id']
+        lista_perguntas_individual[6] = dificuldade[0]['dataValues']['id']
+        lista_perguntas_individual[7] = dificuldade[1]['dataValues']['id']
+        lista_perguntas_individual[8] = dificuldade[2]['dataValues']['id']
+        lista_perguntas_individual[9] = dificuldade[3]['dataValues']['id']
     })    
   res.render('inicio_show')
 })
@@ -226,8 +225,8 @@ app.get('/inicio_show', function (req, res) {
 // Proxima Show
 app.get('/prox_show', function (req, res) {
     // Verificamos para a proxima pergunta
-    req.session.pergunta_individual_momento = req.session.pergunta_individual_momento + 1
-    if (req.session.pergunta_individual_momento == 10){
+    pergunta_individual_momento = pergunta_individual_momento + 1
+    if (pergunta_individual_momento == 10){
         res.send('Parabens! Voce ganhou!')
     }
     else{
@@ -236,10 +235,10 @@ app.get('/prox_show', function (req, res) {
 })
 // TELA SHOW DO VITAO
 app.get('/show', function (req, res) {
-    console.log(req.session.lista_perguntas_individual)
+    console.log(lista_perguntas_individual)
     perguntas.findAll({
         where: {
-            id: req.session.lista_perguntas_individual[req.session.pergunta_individual_momento]
+            id: lista_perguntas_individual[pergunta_individual_momento]
         } 
     }).then(function(pergunta_resposta){
         // resp_correta = pergunta_resposta['perguntas']['dataValues']['pergunta']
@@ -287,10 +286,10 @@ app.get('/show', function (req, res) {
             resp_4_bol = true
         }
         dificuldade = pergunta_resposta[0]['dataValues']['dificuldade']
-        numero_pergunta = req.session.pergunta_individual_momento + 1
+        numero_pergunta = pergunta_individual_momento + 1
         // Aqui definimos a numeracao de pergunta:
-        // req.session.lista_perguntas_individual[0] = resp_1
-        // console.log(req.session.lista_perguntas_individual)
+        // lista_perguntas_individual[0] = resp_1
+        // console.log(lista_perguntas_individual)
         // pergunta_resposta = lista
         // lista[0] = a
         // a['resp_correta'] = resp_correta
@@ -437,7 +436,7 @@ app.get('/show_multi', function (req, res) {
             resp_4_bol = true
         }
         dificuldade = pergunta_resposta[0]['dataValues']['dificuldade']
-        numero_pergunta = req.session.pergunta_individual_momento + 1
+        numero_pergunta = pergunta_individual_momento + 1
         usuario_nome_1 = usuarios_nomes[0]
         usuario_nome_2 = usuarios_nomes[1]
         id_usuario_1 = usuarios_ids[0]
@@ -445,8 +444,8 @@ app.get('/show_multi', function (req, res) {
         meu_id = req.session.id_usuario
         console.log(usuario_nome_2, id_usuario_2)
         // Aqui definimos a numeracao de pergunta:
-        // req.session.lista_perguntas_individual[0] = resp_1
-        // console.log(req.session.lista_perguntas_individual)
+        // lista_perguntas_individual[0] = resp_1
+        // console.log(lista_perguntas_individual)
         // pergunta_resposta = lista
         // lista[0] = a
         // a['resp_correta'] = resp_correta
@@ -495,7 +494,7 @@ app.get("/comprar.html", function(req, res){
     res.sendFile(__dirname + "/src/comprar.html")
 })
 app.get("/", function(req, res){
-    res.render("login")
+    res.sendFile(__dirname + "/src/login.html")
 })
 // Usando o CSS
 app.use('/css/show.css', express.static(__dirname + "/css/show.css"));
