@@ -136,7 +136,7 @@ app.post('/sel-login', function (req, res) {
             req.session.id_usuario = resp_login[0]['dataValues']['id']
             req.session.nome = resp_login[0]['dataValues']['nome']
             req.session.dinheiro = resp_login[0]['dataValues']['dinheiro']
-            req.session.lista_perguntas_individual = []
+            // req.session.lista_perguntas_individual = []
             usuario_resposta[req.session.id_usuario] = 0
             usuarios_nomes.push(req.session.nome)
             usuarios_ids.push(req.session.id_usuario)
@@ -237,7 +237,7 @@ app.get('/prox_show', function (req, res) {
 })
 // TELA SHOW DO VITAO
 app.get('/show', function (req, res) {
-    console.log(req.session.lista_perguntas_individual)
+    // console.log(req.session.lista_perguntas_individual)
     perguntas.findAll({
         where: {
             id: req.session.lista_perguntas_individual[req.session.pergunta_individual_momento]
