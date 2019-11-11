@@ -20,7 +20,7 @@
 
 
 
-        var socket = io('https://showdovitao.herokuapp.com/')
+        var socket = io('http://localhost:8080')
 
         socket.on('receivedMessage', function(message){
             renderMessage(message)
