@@ -136,7 +136,8 @@ app.post('/sel-login', function (req, res) {
             req.session.id_usuario = resp_login[0]['dataValues']['id']
             req.session.nome = resp_login[0]['dataValues']['nome']
             req.session.dinheiro = resp_login[0]['dataValues']['dinheiro']
-            // req.session.lista_perguntas_individual = []
+            req.session.lista_perguntas_individual = []
+            req.session.pergunta_individual_momento = 0
             usuario_resposta[req.session.id_usuario] = 0
             usuarios_nomes.push(req.session.nome)
             usuarios_ids.push(req.session.id_usuario)
@@ -172,6 +173,7 @@ app.post('/add-cadastro', function (req, res) {
 // MENU
 app.get('/menu', function (req, res) {
     // zeramos a pergunta do momento quando voltamos pro menu
+    req.session.lista_perguntas_individual = []
     req.session.pergunta_individual_momento = 0
     res.render('menu')
 })
@@ -179,7 +181,6 @@ app.get('/menu', function (req, res) {
 // Inicio Show
 app.get('/inicio_show', function (req, res) {
     // zeramos a pergunta do momento quando voltamos pro menu
-    req.session.lista_perguntas_individual = []
     req.session.pergunta_individual_momento = 0
     perguntas.findAll({
         // attributes: [[sequelize.fn('COUNT', sequelize.col('dificuldade')), 'dificuldade']],
@@ -237,7 +238,7 @@ app.get('/prox_show', function (req, res) {
 })
 // TELA SHOW DO VITAO
 app.get('/show', function (req, res) {
-    // console.log(req.session.lista_perguntas_individual)
+    console.log(req.session.lista_perguntas_individual)
     perguntas.findAll({
         where: {
             id: req.session.lista_perguntas_individual[req.session.pergunta_individual_momento]
