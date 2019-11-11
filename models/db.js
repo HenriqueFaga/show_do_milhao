@@ -1,10 +1,10 @@
-// instanciando o Sequelize (interacao com o MYSQL)
+// instanciando o Sequelize (interacao com o Postgresql)
 const Sequelize = require('sequelize')
 
 // crio o objeto Squelize
-const sequelize = new Sequelize('show_do_milhao', 'henrique', '123456', {
-    host: 'localhost',
-    dialect: 'mysql'
+const sequelize = new Sequelize('d14khc46rmqurq', 'uiylmptkvlyqmb', 'f173c8ae8dfe5ffea1abc1b1a97ce2fa3b8fac501343b6249871b9f706a5feb4', {
+    host: 'ec2-174-129-253-144.compute-1.amazonaws.com',
+    dialect: 'postgres'
 })
 
 module.exports = {
