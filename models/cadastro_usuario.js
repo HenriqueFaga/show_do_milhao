@@ -27,35 +27,35 @@ module.exports = usuarios
 // usuarios.sync({force:true});
 
 // Inserir dados
-usuarios.create({
-    nome: 'henrique',
-    email: 'henrique@henrique.com',
-    senha: '123123123',
-    dinheiro: 500
-})
-usuarios.create({
-    nome: 'giovanna',
-    email: 'giovanna@giovanna.com',
-    senha: '123123123',
-    dinheiro: 500
-})
-usuarios.create({
-    nome: 'amanda',
-    email: 'amanda@amanda.com',
-    senha: '123123123',
-    dinheiro: 500
-})
+// usuarios.create({
+//     nome: 'henrique',
+//     email: 'henrique@henrique.com',
+//     senha: '123123123',
+//     dinheiro: 500
+// })
+// usuarios.create({
+//     nome: 'giovanna',
+//     email: 'giovanna@giovanna.com',
+//     senha: '123123123',
+//     dinheiro: 500
+// })
+// usuarios.create({
+//     nome: 'amanda',
+//     email: 'amanda@amanda.com',
+//     senha: '123123123',
+//     dinheiro: 500
+// })
 
-usuarios.create({
-    nome: 'sergio',
-    email: 'sergio@sergio.com',
-    senha: '123123123',
-    dinheiro: 500
-})
+// usuarios.create({
+//     nome: 'sergio',
+//     email: 'sergio@sergio.com',
+//     senha: '123123123',
+//     dinheiro: 500
+// })
 
-usuarios.create({
-    nome: 'rosangela',
-    email: 'rosangela@rosangela.com',
-    senha: '123123123',
-    dinheiro: 500
-})
+// usuarios.create({
+//     nome: 'rosangela',
+//     email: 'rosangela@rosangela.com',
+//     senha: '123123123',
+//     dinheiro: 500
+// })
