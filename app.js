@@ -29,7 +29,7 @@ const io = require('socket.io')(server)
 // Array para armazenar mensagens do Chat
 let messages = []
 var usuario_resposta = {}
-var usuario_espera = [false, false]
+var usuario_espera = 0
 var usuarios_nomes = []
 var usuarios_ids = []
 pronto_para_jogo = false
@@ -37,33 +37,19 @@ io.on('connection', socket => {
     console.log(`Socket conectado! ${socket.id}`)
 
     socket.on('Estou_aqui', data => {
-        if (usuario_espera[0] == false){
-            console.log('Conectou 1')
-            console.log(usuario_espera)
-            usuario_espera[0] = true
-            console.log(usuario_espera)
-            // a = app.use(function(req, res, next) {
-            //   if (!req.session) {
-            //     return next(new Error('oh no')) // handle error
-            //   }
-            //   console.log("sadasdasd")
-            //   next() // otherwise continue
-            // })
-        }
-        else if(usuario_espera[0] == true && usuario_espera[1] == false){
-            console.log('Conectou 2')
-            console.log(usuario_espera)
-            usuario_espera[1] = true
-            if(usuario_espera[1] == true && usuario_espera[0] == true){
-                usuario_espera[0] = false
-                usuario_espera[1] = false
-                socket.broadcast.emit('todos_conectados', 0)
-            }
-        }
-    })
 
-    socket.on('vem_vc_tambem', data => {
-        socket.broadcast.emit('eba_eu_vou', data)
+        usuario_espera = usuario_espera + 1
+       
+        if (usuario_espera > 1){
+            // console.log(usuario_espera)
+            a = 0
+            setInterval(function(){
+                a += 1
+                if(a == 10){
+                    socket.broadcast.emit('todos_conectados', 0)
+                }
+            }, 300)
+        }
     })
     // if (quant_usuarios[0] == 0){
     //     quant_usuarios[0] = socket.id
@@ -91,6 +77,7 @@ io.on('connection', socket => {
             }
         }, 1000)
     })
+
 
     socket.on('Clicou_resposta', data => {
         id_usuarios.push(data)
@@ -180,8 +167,8 @@ app.post('/add-cadastro', function (req, res) {
     res.redirect('/login');
 })
 
-// var lista_perguntas_individual = []
-// var pergunta_individual_momento = 0
+// var req.session.lista_perguntas_individual = []
+// var req.session.pergunta_individual_momento = 0
 
 // MENU
 app.get('/menu', function (req, res) {
@@ -459,8 +446,8 @@ app.get('/show_multi', function (req, res) {
         meu_id = req.session.id_usuario
         console.log(usuario_nome_2, id_usuario_2)
         // Aqui definimos a numeracao de pergunta:
-        // req.session.lista_perguntas_individual[0] = resp_1
-        // console.log(req.session.lista_perguntas_individual)
+        // lista_perguntas_individual[0] = resp_1
+        // console.log(lista_perguntas_individual)
         // pergunta_resposta = lista
         // lista[0] = a
         // a['resp_correta'] = resp_correta
@@ -493,9 +480,9 @@ app.get('/show_multi', function (req, res) {
 })
 
 // funcionara no caminho localhost:8080/
-// app.get("/show.html", function(req, res){
-//     res.sendFile(__dirname + "/src/show.html")
-// })
+app.get("/show.html", function(req, res){
+    res.sendFile(__dirname + "/src/show.html")
+})
 app.get("/menu.html", function(req, res){
     res.sendFile(__dirname + "/src/menu.html")
 })
@@ -509,7 +496,7 @@ app.get("/comprar.html", function(req, res){
     res.sendFile(__dirname + "/src/comprar.html")
 })
 app.get("/", function(req, res){
-    res.render("login")
+    res.sendFile(__dirname + "/src/login.html")
 })
 // Usando o CSS
 app.use('/css/show.css', express.static(__dirname + "/css/show.css"));
@@ -533,7 +520,6 @@ app.use('/imagens/money.png', express.static(__dirname + "/imagens/money.png"));
 app.use('/imagens/rei.png', express.static(__dirname + "/imagens/rei.png"));
 app.use('/imagens/senhorbarba.png', express.static(__dirname + "/imagens/senhorbarba.png"));
 app.use('/imagens/traz.png', express.static(__dirname + "/imagens/traz.png"));
-
 // Escutando a porta 8080
 var porta = process.env.PORT || 8080;
 server.listen(porta);
