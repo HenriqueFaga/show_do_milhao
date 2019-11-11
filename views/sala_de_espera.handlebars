@@ -2,17 +2,54 @@
 <html>
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
     <title>Sala de Espera</title>
+    <style type="text/css">
+        div.bloco{
+            padding: 25px;
+            width:400px;
+            height:400px;
+            border-radius: 10px;
+            border-width: 2px;
+            border-color:#000000;
+            border-style: solid;
+            /*align-content: top;*/
+            background-color:#e5ffff;
+        }
+    </style>
 </head>
-<body>
-    Esperando.. <div name="usuario_2"></div>
+<body align="center">
+    <div align="center" class="bloco" height="300" width="300">
+    <form id="chat">
+    <button id="conecta" height="300" width="300" border="solid" type="submit">Click para iniciar Busca</button>
+    </form>
+    </div>
     <script type="text/javascript">
         var socket = io('http://localhost:8080')
         var estou_aqui = {agora: 'true'}
-        socket.emit('Estou_aqui', estou_aqui)
         socket.on('todos_conectados', function(){
-            console.log('sadasdasdasdas')
+            var messageObject = {
+                envia: "ok"
+            }
+            socket.emit('vem_vc_tambem', messageObject)
+            console.log('Ok vou para a proxima pagina')
             window.location = "inicio_show_multi"
+        })
+        socket.on('eba_eu_vou', function(){
+            window.location = "inicio_show_multi"
+        })
+        $('#chat').submit(function(event){
+            window.document.getElementById('conecta').disabled = true
+            event.preventDefault()
+            // var author = $('input[name=username]').val()
+            // var mensagem = $('input[name=mensagem]').val()
+            var messageObject = {
+                envia: "ok"
+            }
+            // renderMessage(messageObject)
+
+            socket.emit('Estou_aqui', messageObject)
         })
     </script>
 </body>
