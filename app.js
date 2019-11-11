@@ -166,7 +166,7 @@ app.post('/add-cadastro', function (req, res) {
     res.redirect('/login');
 })
 
-var req.session.lista_perguntas_individual = []
+// var req.session.lista_perguntas_individual = []
 // var req.session.pergunta_individual_momento = 0
 
 // MENU
