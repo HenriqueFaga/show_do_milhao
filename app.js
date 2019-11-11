@@ -29,7 +29,7 @@ const io = require('socket.io')(server)
 // Array para armazenar mensagens do Chat
 let messages = []
 var usuario_resposta = {}
-var usuario_espera = 0
+var usuario_espera = [false, false]
 var usuarios_nomes = []
 var usuarios_ids = []
 pronto_para_jogo = false
@@ -37,19 +37,33 @@ io.on('connection', socket => {
     console.log(`Socket conectado! ${socket.id}`)
 
     socket.on('Estou_aqui', data => {
-
-        usuario_espera = usuario_espera + 1
-       
-        if (usuario_espera > 1){
-            // console.log(usuario_espera)
-            a = 0
-            setInterval(function(){
-                a += 1
-                if(a == 10){
-                    socket.broadcast.emit('todos_conectados', 0)
-                }
-            }, 300)
+        if (usuario_espera[0] == false){
+            console.log('Conectou 1')
+            console.log(usuario_espera)
+            usuario_espera[0] = true
+            console.log(usuario_espera)
+            // a = app.use(function(req, res, next) {
+            //   if (!req.session) {
+            //     return next(new Error('oh no')) // handle error
+            //   }
+            //   console.log("sadasdasd")
+            //   next() // otherwise continue
+            // })
         }
+        else if(usuario_espera[0] == true && usuario_espera[1] == false){
+            console.log('Conectou 2')
+            console.log(usuario_espera)
+            usuario_espera[1] = true
+            if(usuario_espera[1] == true && usuario_espera[0] == true){
+                usuario_espera[0] = false
+                usuario_espera[1] = false
+                socket.broadcast.emit('todos_conectados', 0)
+            }
+        }
+    })
+
+    socket.on('vem_vc_tambem', data => {
+        socket.broadcast.emit('eba_eu_vou', data)
     })
     // if (quant_usuarios[0] == 0){
     //     quant_usuarios[0] = socket.id
@@ -77,7 +91,6 @@ io.on('connection', socket => {
             }
         }, 1000)
     })
-
 
     socket.on('Clicou_resposta', data => {
         id_usuarios.push(data)
@@ -136,6 +149,8 @@ app.post('/sel-login', function (req, res) {
             req.session.id_usuario = resp_login[0]['dataValues']['id']
             req.session.nome = resp_login[0]['dataValues']['nome']
             req.session.dinheiro = resp_login[0]['dataValues']['dinheiro']
+            req.session.pergunta_individual_momento = 0
+            req.session.lista_perguntas_individual = []
             usuario_resposta[req.session.id_usuario] = 0
             usuarios_nomes.push(req.session.nome)
             usuarios_ids.push(req.session.id_usuario)
@@ -165,20 +180,20 @@ app.post('/add-cadastro', function (req, res) {
     res.redirect('/login');
 })
 
-var lista_perguntas_individual = []
-var pergunta_individual_momento = 0
+// var lista_perguntas_individual = []
+// var pergunta_individual_momento = 0
 
 // MENU
 app.get('/menu', function (req, res) {
     // zeramos a pergunta do momento quando voltamos pro menu
-    pergunta_individual_momento = 0
+    req.session.pergunta_individual_momento = 0
     res.render('menu')
 })
 
 // Inicio Show
 app.get('/inicio_show', function (req, res) {
     // zeramos a pergunta do momento quando voltamos pro menu
-    pergunta_individual_momento = 0
+    req.session.pergunta_individual_momento = 0
     perguntas.findAll({
         // attributes: [[sequelize.fn('COUNT', sequelize.col('dificuldade')), 'dificuldade']],
         where:{
@@ -188,9 +203,9 @@ app.get('/inicio_show', function (req, res) {
         limit : 3
     }).then(function(dificuldade){
         console.log(dificuldade)
-        lista_perguntas_individual[0] = dificuldade[0]['dataValues']['id']
-        lista_perguntas_individual[1] = dificuldade[1]['dataValues']['id']
-        lista_perguntas_individual[2] = dificuldade[2]['dataValues']['id']
+        req.session.lista_perguntas_individual[0] = dificuldade[0]['dataValues']['id']
+        req.session.lista_perguntas_individual[1] = dificuldade[1]['dataValues']['id']
+        req.session.lista_perguntas_individual[2] = dificuldade[2]['dataValues']['id']
     })
     perguntas.findAll({
     // attributes: [[sequelize.fn('COUNT', sequelize.col('dificuldade')), 'dificuldade']],
@@ -201,9 +216,9 @@ app.get('/inicio_show', function (req, res) {
         limit : 3
     }).then(function(dificuldade){
         console.log(dificuldade)
-        lista_perguntas_individual[3] = dificuldade[0]['dataValues']['id']
-        lista_perguntas_individual[4] = dificuldade[1]['dataValues']['id']
-        lista_perguntas_individual[5] = dificuldade[2]['dataValues']['id']
+        req.session.lista_perguntas_individual[3] = dificuldade[0]['dataValues']['id']
+        req.session.lista_perguntas_individual[4] = dificuldade[1]['dataValues']['id']
+        req.session.lista_perguntas_individual[5] = dificuldade[2]['dataValues']['id']
     })
     perguntas.findAll({
     // attributes: [[sequelize.fn('COUNT', sequelize.col('dificuldade')), 'dificuldade']],
@@ -214,10 +229,10 @@ app.get('/inicio_show', function (req, res) {
         limit : 4
     }).then(function(dificuldade){
         console.log(dificuldade)
-        lista_perguntas_individual[6] = dificuldade[0]['dataValues']['id']
-        lista_perguntas_individual[7] = dificuldade[1]['dataValues']['id']
-        lista_perguntas_individual[8] = dificuldade[2]['dataValues']['id']
-        lista_perguntas_individual[9] = dificuldade[3]['dataValues']['id']
+        req.session.lista_perguntas_individual[6] = dificuldade[0]['dataValues']['id']
+        req.session.lista_perguntas_individual[7] = dificuldade[1]['dataValues']['id']
+        req.session.lista_perguntas_individual[8] = dificuldade[2]['dataValues']['id']
+        req.session.lista_perguntas_individual[9] = dificuldade[3]['dataValues']['id']
     })    
   res.render('inicio_show')
 })
@@ -225,8 +240,8 @@ app.get('/inicio_show', function (req, res) {
 // Proxima Show
 app.get('/prox_show', function (req, res) {
     // Verificamos para a proxima pergunta
-    pergunta_individual_momento = pergunta_individual_momento + 1
-    if (pergunta_individual_momento == 10){
+    req.session.pergunta_individual_momento = req.session.pergunta_individual_momento + 1
+    if (req.session.pergunta_individual_momento == 10){
         res.send('Parabens! Voce ganhou!')
     }
     else{
@@ -235,10 +250,10 @@ app.get('/prox_show', function (req, res) {
 })
 // TELA SHOW DO VITAO
 app.get('/show', function (req, res) {
-    console.log(lista_perguntas_individual)
+    console.log(req.session.lista_perguntas_individual)
     perguntas.findAll({
         where: {
-            id: lista_perguntas_individual[pergunta_individual_momento]
+            id: req.session.lista_perguntas_individual[req.session.pergunta_individual_momento]
         } 
     }).then(function(pergunta_resposta){
         // resp_correta = pergunta_resposta['perguntas']['dataValues']['pergunta']
@@ -286,10 +301,10 @@ app.get('/show', function (req, res) {
             resp_4_bol = true
         }
         dificuldade = pergunta_resposta[0]['dataValues']['dificuldade']
-        numero_pergunta = pergunta_individual_momento + 1
+        numero_pergunta = req.session.pergunta_individual_momento + 1
         // Aqui definimos a numeracao de pergunta:
-        // lista_perguntas_individual[0] = resp_1
-        // console.log(lista_perguntas_individual)
+        // req.session.lista_perguntas_individual[0] = resp_1
+        // console.log(req.session.lista_perguntas_individual)
         // pergunta_resposta = lista
         // lista[0] = a
         // a['resp_correta'] = resp_correta
@@ -436,7 +451,7 @@ app.get('/show_multi', function (req, res) {
             resp_4_bol = true
         }
         dificuldade = pergunta_resposta[0]['dataValues']['dificuldade']
-        numero_pergunta = pergunta_individual_momento + 1
+        numero_pergunta = req.session.pergunta_individual_momento + 1
         usuario_nome_1 = usuarios_nomes[0]
         usuario_nome_2 = usuarios_nomes[1]
         id_usuario_1 = usuarios_ids[0]
@@ -444,8 +459,8 @@ app.get('/show_multi', function (req, res) {
         meu_id = req.session.id_usuario
         console.log(usuario_nome_2, id_usuario_2)
         // Aqui definimos a numeracao de pergunta:
-        // lista_perguntas_individual[0] = resp_1
-        // console.log(lista_perguntas_individual)
+        // req.session.lista_perguntas_individual[0] = resp_1
+        // console.log(req.session.lista_perguntas_individual)
         // pergunta_resposta = lista
         // lista[0] = a
         // a['resp_correta'] = resp_correta
@@ -478,9 +493,9 @@ app.get('/show_multi', function (req, res) {
 })
 
 // funcionara no caminho localhost:8080/
-app.get("/show.html", function(req, res){
-    res.sendFile(__dirname + "/src/show.html")
-})
+// app.get("/show.html", function(req, res){
+//     res.sendFile(__dirname + "/src/show.html")
+// })
 app.get("/menu.html", function(req, res){
     res.sendFile(__dirname + "/src/menu.html")
 })
@@ -494,7 +509,7 @@ app.get("/comprar.html", function(req, res){
     res.sendFile(__dirname + "/src/comprar.html")
 })
 app.get("/", function(req, res){
-    res.sendFile(__dirname + "/src/login.html")
+    res.render("login")
 })
 // Usando o CSS
 app.use('/css/show.css', express.static(__dirname + "/css/show.css"));
@@ -518,6 +533,7 @@ app.use('/imagens/money.png', express.static(__dirname + "/imagens/money.png"));
 app.use('/imagens/rei.png', express.static(__dirname + "/imagens/rei.png"));
 app.use('/imagens/senhorbarba.png', express.static(__dirname + "/imagens/senhorbarba.png"));
 app.use('/imagens/traz.png', express.static(__dirname + "/imagens/traz.png"));
+
 // Escutando a porta 8080
 var porta = process.env.PORT || 8080;
 server.listen(porta);
