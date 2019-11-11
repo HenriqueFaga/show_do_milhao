@@ -495,7 +495,7 @@ app.get("/comprar.html", function(req, res){
     res.sendFile(__dirname + "/src/comprar.html")
 })
 app.get("/", function(req, res){
-    res.render('login')
+    res.render("login")
 })
 // Usando o CSS
 app.use('/css/show.css', express.static(__dirname + "/css/show.css"));
@@ -522,4 +522,3 @@ app.use('/imagens/traz.png', express.static(__dirname + "/imagens/traz.png"));
 // Escutando a porta 8080
 var porta = process.env.PORT || 8080;
 server.listen(porta);
-
