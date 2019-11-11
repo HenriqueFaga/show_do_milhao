@@ -522,3 +522,4 @@ app.use('/imagens/traz.png', express.static(__dirname + "/imagens/traz.png"));
 // Escutando a porta 8080
 var porta = process.env.PORT || 8080;
 server.listen(porta);
+
