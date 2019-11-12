@@ -119,13 +119,14 @@ io.on('connection', socket => {
                         socket.broadcast.emit('acabouTempo', retorno)
                         setInterval(function(){
                             espera_duas_respostas = []
+                            usuario_resposta = []
                             socket.broadcast.emit('Troca_pagina', retorno)
                         }, 2000)
                         a = 0
                     }
                 }, 4000)
                 espera_duas_respostas = []
-
+                usuario_resposta = []
             }
         }
         else{
