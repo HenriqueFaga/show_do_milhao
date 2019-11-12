@@ -37,19 +37,24 @@ io.on('connection', socket => {
     console.log(`Socket conectado! ${socket.id}`)
 
     socket.on('Estou_aqui', data => {
-
-        usuario_espera = usuario_espera + 1
-       
-        if (usuario_espera > 1){
-            // console.log(usuario_espera)
-            a = 0
-            setInterval(function(){
-                a += 1
-                if(a == 10){
-                    socket.broadcast.emit('todos_conectados', 0)
-                }
-            }, 300)
+        if (usuario_espera[0] == false){
+            console.log('Conectou 1')
+            usuario_espera[0] = true
         }
+        else if(usuario_espera[0] == true && usuario_espera[1] == false){
+            console.log('Conectou 2')
+            console.log(usuario_espera)
+            usuario_espera[1] = true
+            if(usuario_espera[1] == true && usuario_espera[0] == true){
+                usuario_espera[0] = false
+                usuario_espera[1] = false
+                socket.broadcast.emit('todos_conectados', 0)
+            }
+        }
+    })
+
+    socket.on('vem_vc_tambem', data => {
+        socket.broadcast.emit('eba_eu_vou', data)
     })
     // if (quant_usuarios[0] == 0){
     //     quant_usuarios[0] = socket.id
@@ -78,7 +83,6 @@ io.on('connection', socket => {
         }, 1000)
     })
 
-
     socket.on('Clicou_resposta', data => {
         id_usuarios.push(data)
         socket.broadcast.emit('Nome_do_usuario', data)
@@ -89,15 +93,63 @@ io.on('connection', socket => {
         var resp = {conteudo: resposta['conteudo'], id_usuario: resposta['id_usuario']}
         console.log('Entra aqui')
         socket.broadcast.emit('quemRespodeu', resp)
-    })
+        if (!espera_duas_respostas[0]){
+            espera_duas_respostas[0] = resposta['id_usuario']
+        }
+        else if (!espera_duas_respostas[1]){
+            if(espera_duas_respostas[0] == resposta['id_usuario']){
+                console.log('Nada acontece, ele trocou a resposta!')
+            }
+            else{
+                espera_duas_respostas[1] = resposta['id_usuario']
+                console.log('Todos responderam!')
+                a = 0
+                setInterval(function(){
+                    a += 1
+                    if(a == 5){
+                        retorno = {}
+                        for (i in usuario_resposta){
+                            console.log(i)
+                            console.log(usuario_resposta[i])
+                            retorno[i] = usuario_resposta[i]
+                        }
+                        console.log(retorno)
+                        socket.broadcast.emit('acabouTempo', retorno)
+                        setInterval(function(){
+                            espera_duas_respostas = []
+                            socket.broadcast.emit('Troca_pagina', retorno)
+                        }, 2000)
+                        a = 0
+                    }
+                }, 4000)
+                espera_duas_respostas = []
 
+            }
+        }
+        else{
+            console.log('Nada acontece, ele 2 trocou a resposta!')
+        }
+    })
+    socket.on('ababouTempo2', data => {
+        retorno = {}
+        for (i in usuario_resposta){
+            retorno[i] = usuario_resposta[i]
+        }
+        socket.broadcast.emit('acabouMeuTempo', retorno)
+    })
+    socket.on('Troca_pagina_2', data => {
+        retorno = {}
+        for (i in usuario_resposta){
+            retorno[i] = usuario_resposta[i]
+        }
+        socket.broadcast.emit('Troca_minha_pagina', retorno)
+    })
     socket.on('sendMessage', data => {
         console.log(data)
         messages.push(data)
         socket.broadcast.emit('receivedMessage', data)
     })
 })
-
 app.use(bodyParser.urlencoded({ extended: false }))
  // parse application/json
 app.use(bodyParser.json())
@@ -494,7 +546,7 @@ app.get("/comprar.html", function(req, res){
     res.sendFile(__dirname + "/src/comprar.html")
 })
 app.get("/", function(req, res){
-    res.sendFile(__dirname + "/src/login.html")
+    res.render("login")
 })
 // Usando o CSS
 app.use('/css/show.css', express.static(__dirname + "/css/show.css"));
