@@ -32,7 +32,7 @@ const perguntas = db.sequelize.define('perguntas', {
 });
 
 // Para criar a tabela
-// perguntas.sync({force:true});
+perguntas.sync({force:true});
 module.exports = perguntas
 
 // Inserir dados
