@@ -5,7 +5,7 @@
     <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
     crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="css/show_multi.css">
-    <script type="text/javascript" src="js/show.js"></script>
+    <script type="text/javascript" src="js/show_multi.js"></script>
 </head>
 <body align="center">
     {{#with dados}}
@@ -118,7 +118,7 @@
     </form>
 {{/with}}
     <script type="text/javascript">
-        var socket = io('http://localhost:8080')
+        var socket = io('https://showdovitao.herokuapp.com/')
         function mouse_click(resposta){
             resp = window.document.getElementById(resposta.id)
             r = resp.getAttribute('value')
@@ -141,6 +141,62 @@
             console.log(message.conteudo)
             a = window.document.getElementById(message.id_usuario)
             a.innerHTML = message.conteudo
+        })
+
+        // ACABOU O TEMPO
+        socket.on('acabouTempo', function(message){
+            console.log(message.conteudo)
+            window.document.getElementById('resp_1').onclick =  ""
+            window.document.getElementById('resp_2').onclick =  ""
+            window.document.getElementById('resp_3').onclick =  ""
+            window.document.getElementById('resp_4').onclick =  ""
+            for (i in message){
+               a = window.document.getElementById(i)
+                if (message[i] == 'false'){
+                    a.innerHTML = a.innerHTML + '<strong color="green">(ERRADA!)</strong>'}
+                else if(message[i] == 'true'){a.innerHTML = a.innerHTML + '<strong color="read">(CORRETA!)</strong>'}
+            }
+            socket.emit('ababouTempo2', message)
+        })
+        socket.on('acabouMeuTempo', function(message){
+            console.log(message.conteudo)
+            window.document.getElementById('resp_1').onclick =  ""
+            window.document.getElementById('resp_2').onclick =  ""
+            window.document.getElementById('resp_3').onclick =  ""
+            window.document.getElementById('resp_4').onclick =  ""
+            for (i in message){
+                a = window.document.getElementById(i)
+                if (message[i] == 'false'){
+                    a.innerHTML = a.innerHTML + '<strong color="green">(ERRADA!)</strong>'}
+                else if(message[i] == 'true'){a.innerHTML = a.innerHTML + '<strong color="read">(CORRETA!)</strong>'}
+            }
+        })
+
+        // Acabou o tempo e esta na Hora de Troca de Pagina
+        socket.on('Troca_pagina', function(message){
+            // console.log(message.conteudo)
+            socket.emit('Troca_pagina_2', message)
+            for (i in message){
+                a = window.document.getElementById("meu_id").value
+                if (i == a){
+                    if (message[i] == 'false'){
+                    window.location = "menu"}
+                    else if(message[i] == 'true'){
+                    window.location = "menu"}
+                }
+            }
+        })
+        socket.on('Troca_minha_pagina', function(message){
+            // console.log(message.conteudo)
+            for (i in message){
+                a = window.document.getElementById("meu_id").value
+                if (i == a){
+                    if (message[i] == 'false'){
+                    window.location = "menu"}
+                    else if(message[i] == 'true'){
+                    window.location = "menu"}
+                }
+            }
         })
     </script>
 </body>
