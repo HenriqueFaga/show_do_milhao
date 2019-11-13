@@ -23,10 +23,13 @@
     <div align="center" class="bloco" height="300" width="300">
     <form id="chat">
     <button id="conecta" height="300" width="300" border="solid" type="submit">Click para iniciar Busca</button>
+    <br>
+    <br>
+    <img id="carregando" height="170" width="150px" src="imagens/carregando.gif" style="display: none;">
     </form>
     </div>
     <script type="text/javascript">
-        var socket = io('https://showdovitao.herokuapp.com/')
+        var socket = io('http://localhost:8080')
         var estou_aqui = {agora: 'true'}
         socket.on('todos_conectados', function(){
             var messageObject = {
@@ -41,6 +44,7 @@
         })
         $('#chat').submit(function(event){
             window.document.getElementById('conecta').disabled = true
+            window.document.getElementById("carregando").style = 'display: block;'
             event.preventDefault()
             // var author = $('input[name=username]').val()
             // var mensagem = $('input[name=mensagem]').val()
