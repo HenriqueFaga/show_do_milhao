@@ -95,8 +95,9 @@
                     </div>
                     <div class="espacamento_branco"></div>
                     <div class="chat">
-                        <div id="resposta_usuario_1" value="{{id_usuario_1}}"><strong>{{usuario_nome_1}}</strong> - <div id="{{id_usuario_1}}">Pensando...</div></div>
-                        <div id="resposta_usuario_2" value="{{id_usuario_2}}"><strong>{{usuario_nome_2}}</strong> - <div id="{{id_usuario_2}}">Pensando...</div></div>
+                        <div style="float:left;"><div id="resposta_usuario_1" value="{{id_usuario_1}}"><strong>{{usuario_nome_1}}</strong> - <div id="{{id_usuario_1}}">Pensando...</div></div>
+                        <div id="resposta_usuario_2" value="{{id_usuario_2}}"><strong>{{usuario_nome_2}}</strong> - <div id="{{id_usuario_2}}">Pensando...</div></div></div>
+                        <div id="imagem_dancando" style="display: none;"><img height="170" width="150px" src="/imagens/hulk_dancando.gif"></div>
                     </div>
                     <input type="hidden" id="meu_id" name="meu_id" value="{{meu_id}}">
                     <div class="espacamento_branco"></div>
@@ -118,7 +119,7 @@
     </form>
 {{/with}}
     <script type="text/javascript">
-        var socket = io('https://showdovitao.herokuapp.com/')
+        var socket = io('http://localhost:8080')
         function mouse_click(resposta){
             resp = window.document.getElementById(resposta.id)
             r = resp.getAttribute('value')
@@ -134,12 +135,14 @@
             window.document.getElementById('resp_2').style =  "background-color:#6495ed;"
             window.document.getElementById('resp_3').style =  "background-color:#6495ed;"
             window.document.getElementById('resp_4').style =  "background-color:#6495ed;"
+            window.document.getElementById('imagem_dancando').style = "display: block;"
             resp.style = "background-color: green;"
         }
 
         socket.on('quemRespodeu', function(message){
             console.log(message.conteudo)
             a = window.document.getElementById(message.id_usuario)
+            window.document.getElementById('imagem_dancando').style = "display: block;"
             a.innerHTML = message.conteudo
         })
 
@@ -150,6 +153,7 @@
             window.document.getElementById('resp_2').onclick =  ""
             window.document.getElementById('resp_3').onclick =  ""
             window.document.getElementById('resp_4').onclick =  ""
+            window.document.getElementById('imagem_dancando').style = "display: block;"
             for (i in message){
                a = window.document.getElementById(i)
                 if (message[i] == 'false'){
@@ -176,27 +180,11 @@
         socket.on('Troca_pagina', function(message){
             // console.log(message.conteudo)
             socket.emit('Troca_pagina_2', message)
-            for (i in message){
-                a = window.document.getElementById("meu_id").value
-                if (i == a){
-                    if (message[i] == 'false'){
-                    window.location = "menu"}
-                    else if(message[i] == 'true'){
-                    window.location = "menu"}
-                }
-            }
+            window.location = message
         })
         socket.on('Troca_minha_pagina', function(message){
             // console.log(message.conteudo)
-            for (i in message){
-                a = window.document.getElementById("meu_id").value
-                if (i == a){
-                    if (message[i] == 'false'){
-                    window.location = "menu"}
-                    else if(message[i] == 'true'){
-                    window.location = "menu"}
-                }
-            }
+            window.location = message
         })
     </script>
 </body>
