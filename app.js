@@ -106,25 +106,38 @@ io.on('connection', socket => {
                 espera_duas_respostas[1] = resposta['id_usuario']
                 console.log('Todos responderam!')
                 a = 0
-                setInterval(function(){
+                time1 = setInterval(function(){
                     a += 1
                     if(a == 5){
                         retorno = {}
+                        alguem_errou = false
                         for (i in usuario_resposta){
                             console.log(i)
                             console.log(usuario_resposta[i])
                             retorno[i] = usuario_resposta[i]
+                            // Condicao para verificar se algum errou
+                            if (usuario_resposta[i] == 'false'){alguem_errou = true}
                         }
                         console.log(retorno)
                         socket.broadcast.emit('acabouTempo', retorno)
-                        setInterval(function(){
+                        time2 = setInterval(function(){
                             espera_duas_respostas = []
-                            socket.broadcast.emit('Troca_pagina', retorno)
-                        }, 2000)
+                            // Condicao para verificar se algum errou
+                            if(alguem_errou == true){
+                                pagina = 'menu'
+                            }
+                            else{
+                                pagina = 'prox_show_multi'
+                            }
+                            clearInterval(time2);
+                            socket.broadcast.emit('Troca_pagina', pagina)
+                        }, 1000)
                         a = 0
+                        clearInterval(time1);
                     }
-                }, 4000)
+                }, 1000)
                 espera_duas_respostas = []
+
             }
         }
         else{
@@ -139,11 +152,19 @@ io.on('connection', socket => {
         socket.broadcast.emit('acabouMeuTempo', retorno)
     })
     socket.on('Troca_pagina_2', data => {
-        retorno = {}
+        alguem_errou = false
         for (i in usuario_resposta){
-            retorno[i] = usuario_resposta[i]
+            if (usuario_resposta[i] == 'false'){alguem_errou = true}
         }
-        socket.broadcast.emit('Troca_minha_pagina', retorno)
+        if(alguem_errou == true){
+            pagina = 'menu'
+        }
+        else{
+            pagina = 'prox_show_multi'
+        }
+        espera_duas_respostas = []
+        console.log(espera_duas_respostas)
+        socket.broadcast.emit('Troca_minha_pagina', pagina)
     })
     socket.on('sendMessage', data => {
         console.log(data)
@@ -193,8 +214,6 @@ app.post('/sel-login', function (req, res) {
             req.session.pergunta_individual_momento = 0
             // req.session.lista_perguntas_individual = []
             usuario_resposta[req.session.id_usuario] = 0
-            usuarios_nomes.push(req.session.nome)
-            usuarios_ids.push(req.session.id_usuario)
             // console.log(req.session)
             console.log(usuario_resposta)
             console.log(usuarios_nomes)
@@ -387,6 +406,8 @@ app.post('/prox-pergunta', function (req, res) {
 
 app.get('/sala_de_espera', function (req, res) {
     // console.log(req.body.id_usuario)
+    usuarios_nomes.push(req.session.nome)
+    usuarios_ids.push(req.session.id_usuario)
     res.render('sala_de_espera')
 })
 
@@ -396,6 +417,8 @@ var pergunta_multi_momento = 0
 
 app.get('/inicio_show_multi', function (req, res) {
     // zeramos a pergunta do momento quando voltamos pro menu
+    espera_duas_respostas = []
+    usuario_resposta = {}
     pergunta_multi_momento = 0
     perguntas.findAll({
         // attributes: [[sequelize.fn('COUNT', sequelize.col('dificuldade')), 'dificuldade']],
@@ -440,6 +463,18 @@ app.get('/inicio_show_multi', function (req, res) {
   res.render('inicio_show_multi')
 })
 
+app.get('/prox_show_multi', function (req, res) {
+    // Verificamos para a proxima pergunta
+    espera_duas_respostas = []
+    usuario_resposta = {}
+    pergunta_multi_momento = pergunta_multi_momento + 1
+    if (pergunta_multi_momento == 10){
+        res.send('Parabens! Voce ganhou!')
+    }
+    else{
+        res.render('prox_show_multi')
+    }
+})
 // TELA SHOW DO VITAO MULTIJOGADOR
 app.get('/show_multi', function (req, res) {
     perguntas.findAll({
@@ -558,6 +593,7 @@ app.use('/css/show_multi.css', express.static(__dirname + "/css/show_multi.css")
 
 // Usando o JS
 app.use('/js/show.js', express.static(__dirname + "/js/show.js"));
+app.use('/js/show_multi.js', express.static(__dirname + "/js/show_multi.js"));
 
 // Usando as Imagens 
 app.use('/imagens/2.png', express.static(__dirname + "/imagens/2.png"));
@@ -574,6 +610,9 @@ app.use('/imagens/money.png', express.static(__dirname + "/imagens/money.png"));
 app.use('/imagens/rei.png', express.static(__dirname + "/imagens/rei.png"));
 app.use('/imagens/senhorbarba.png', express.static(__dirname + "/imagens/senhorbarba.png"));
 app.use('/imagens/traz.png', express.static(__dirname + "/imagens/traz.png"));
+app.use('/imagens/carregando.gif', express.static(__dirname + "/imagens/carregando.gif"));
+app.use('/imagens/homem_aranha_dancante.gif', express.static(__dirname + "/imagens/homem_aranha_dancante.gif"));
+app.use('/imagens/hulk_dancando.gif', express.static(__dirname + "/imagens/hulk_dancando.gif"));
 // Escutando a porta 8080
 var porta = process.env.PORT || 8080;
 server.listen(porta);
