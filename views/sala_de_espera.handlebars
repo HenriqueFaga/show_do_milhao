@@ -29,7 +29,7 @@
     </form>
     </div>
     <script type="text/javascript">
-        var socket = io('http://localhost:8080')
+        var socket = io('https://showdovitao.herokuapp.com/')
         var estou_aqui = {agora: 'true'}
         socket.on('todos_conectados', function(){
             var messageObject = {
