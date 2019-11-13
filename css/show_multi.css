@@ -277,3 +277,8 @@ div#errou_voltar{
 }
 div#errou_voltar:hover{cursor: pointer;}
 div#errou_voltar:hover{background-color: #ffff66;}
+
+div#imagem_dancando{
+    float:right;
+    width:100px;
+}
