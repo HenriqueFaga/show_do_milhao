@@ -12,7 +12,7 @@
     <form id='proxima' action="prox_show">
     <div class="topo" align="center">
         <div class="menu">
-            <div class="moedas" id="moedas" name="moedas" value="100"><strong><font id="dinheiro_visivel" color="white">100</font><img class="moeda" src="imagens/moeda.png" height="50px" width="50px"></strong>
+            <div class="moedas" id="moedas" name="moedas" value="{{dinheiro}}"><strong><font id="dinheiro_visivel" color="white">{{dinheiro}}</font><img class="moeda" src="imagens/moeda.png" height="50px" width="50px"></strong>
             </div>
         </div>
     </div>
@@ -53,9 +53,9 @@
                             <div class="padding_vertical"><div class="valor_ajuda">$50</div></div>
                         </div>
                         <div class="espacamento_horizonzal"></div>
-                        <div class="ajuda" id="pular" value="3" onclick="mouse_click_ajuda(this.id)" align="center">
-                            PULAR<img src="imagens/jump.png" height="50px" width="50px">
-                            <div class="padding_vertical"><div class="valor_ajuda">$50</div></div>
+                        <div class="tempo" id="tempo" value="3" align="center">
+                            <strong><font size="6">30<br></font></strong>
+                            <img src="imagens/tempo_3.gif" height="60px" width="60px">
                         </div>
                     </div>
                     <div class="espacamento_branco"></div>
@@ -97,7 +97,7 @@
                     <div class="chat">
                         <div style="float:left;"><div id="resposta_usuario_1" value="{{id_usuario_1}}"><strong>{{usuario_nome_1}}</strong> - <div id="{{id_usuario_1}}">Pensando...</div></div>
                         <div id="resposta_usuario_2" value="{{id_usuario_2}}"><strong>{{usuario_nome_2}}</strong> - <div id="{{id_usuario_2}}">Pensando...</div></div></div>
-                        <div id="imagem_dancando" style="display: none;"><img height="170" width="150px" src="/imagens/hulk_dancando.gif"></div>
+                        <div id="imagem_dancando" style="display: none;"><img height="170" width="150px" src="{{imagem_dance}}"></div>
                     </div>
                     <input type="hidden" id="meu_id" name="meu_id" value="{{meu_id}}">
                     <div class="espacamento_branco"></div>
@@ -179,7 +179,8 @@
         // Acabou o tempo e esta na Hora de Troca de Pagina
         socket.on('Troca_pagina', function(message){
             // console.log(message.conteudo)
-            socket.emit('Troca_pagina_2', message)
+            id_usuario = window.document.getElementById("meu_id").value
+            socket.emit('Troca_pagina_2', id_usuario)
             window.location = message
         })
         socket.on('Troca_minha_pagina', function(message){
