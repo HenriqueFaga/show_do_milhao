@@ -122,7 +122,7 @@ io.on('connection', socket => {
                 a = 0
                 time1 = setInterval(function(){
                     a += 1
-                    if(a == 5){
+                    if(a == 3){
                         retorno = {}
                         alguem_errou = false
                         for (i in usuario_resposta){
@@ -148,6 +148,7 @@ io.on('connection', socket => {
                                 pagina = 'prox_show_multi'
                             }
                             clearInterval(time2);
+                            pergunta_multi_momento = pergunta_multi_momento + 1
                             socket.broadcast.emit('Troca_pagina', pagina)
                         }, 1000)
                         a = 0
@@ -543,7 +544,6 @@ app.get('/prox_show_multi', function (req, res) {
     // Verificamos para a proxima pergunta
     espera_duas_respostas = []
     usuario_resposta = {}
-    pergunta_multi_momento = pergunta_multi_momento + 1
     if (pergunta_multi_momento == 10){
         usuarios_nomes = []
         usuarios_ids = []
