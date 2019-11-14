@@ -22,10 +22,14 @@
 <body align="center">
     <div align="center" class="bloco" height="300" width="300">
     <form id="chat">
+    {{#with dados}}
+    <input type="hidden" id="meu_id" value="{{id_usuario}}">
+    {{/with}}
     <button id="conecta" height="300" width="300" border="solid" type="submit">Click para iniciar Busca</button>
     <br>
     <br>
     <img id="carregando" height="170" width="150px" src="imagens/carregando.gif" style="display: none;">
+    <button id="cancelar" height="300" width="300" border="solid" onclick="cancelar_menu()">Cancelar</button>
     </form>
     </div>
     <script type="text/javascript">
@@ -48,13 +52,17 @@
             event.preventDefault()
             // var author = $('input[name=username]').val()
             // var mensagem = $('input[name=mensagem]').val()
+            id_usuario = window.document.getElementById('meu_id').value
             var messageObject = {
-                envia: "ok"
+                id_usuario: id_usuario
             }
             // renderMessage(messageObject)
 
             socket.emit('Estou_aqui', messageObject)
         })
+        function cancelar_menu(){
+            window.location = "menu"
+        }
     </script>
 </body>
 </html>
