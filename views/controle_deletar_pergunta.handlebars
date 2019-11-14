@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Remover Pergunta no banco</title>
+    <style type="text/css">
+        td{
+            /*border:solid;*/
+        }
+        tr{
+            border:solid;
+        }
+    </style>
+    <script type="text/javascript">
+    </script>
+</head>
+<body>
+    <form id="campo" action="deletar_pergunta" method="POST">
+    <h1>Remover Pergunta no banco</h1>
+    <table style="border:solid;">
+        <tr><td>id</td><td>pergunta</td><td>dificuldade</td></tr>
+    {{#each dados}}
+        <tr>
+            <td>
+                {{id}}
+            </td>
+            <td>
+                {{pergunta}}
+            </td>
+            <td>
+                {{dificuldade}}
+            </td>
+        </tr>
+    {{/each}}
+    </table>
+    <br>
+    Remover pergunta de ID:<input type="text" name="id_pergunta">
+    <input type="submit" name="enviar" value="Deletar">
+    </form>
+    <br>
+</body>
+</html>
