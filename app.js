@@ -29,33 +29,41 @@ const io = require('socket.io')(server)
 // Array para armazenar mensagens do Chat
 let messages = []
 var usuario_resposta = {}
-var usuario_id_resp = {}
+// var usuario_id_resp = {}
 var espera_duas_respostas = []
-var usuario_espera = [false, false]
+var usuario_espera = [null, null]
 var usuarios_nomes = []
 var usuarios_ids = []
+var usuarios_dinheiro = []
 pronto_para_jogo = false
 io.on('connection', socket => {
     console.log(`Socket conectado! ${socket.id}`)
-
+    socket.on('zerarVariaveis', data => {
+        usuario_espera = [null, null]
+        usuarios_nomes = []
+        usuarios_ids = []
+        console.log(usuario_espera, usuarios_nomes, usuarios_ids)
+        socket.broadcast.emit('zeradoAsVariaveis', data)
+    })
     socket.on('Estou_aqui', data => {
-        if (usuario_espera[0] == false){
+        if (usuario_espera[0] == null){
             console.log('Conectou 1')
-            usuario_espera[0] = true
+            usuario_espera[0] = data.id_usuario
         }
-        else if(usuario_espera[0] == true && usuario_espera[1] == false){
+        else if(usuario_espera[0] != null && usuario_espera[1] == null && usuario_espera[0] != data.id_usuario){
             console.log('Conectou 2')
             console.log(usuario_espera)
-            usuario_espera[1] = true
-            if(usuario_espera[1] == true && usuario_espera[0] == true){
-                usuario_espera[0] = false
-                usuario_espera[1] = false
+            usuario_espera[1] = data.id_usuario
+            if(usuario_espera[1] != null && usuario_espera[0] != null){
+                usuario_espera[0] = null
+                usuario_espera[1] = null
                 socket.broadcast.emit('todos_conectados', 0)
             }
         }
     })
 
     socket.on('vem_vc_tambem', data => {
+        pega_perguntas_multi()
         socket.broadcast.emit('eba_eu_vou', data)
     })
     // if (quant_usuarios[0] == 0){
@@ -85,8 +93,14 @@ io.on('connection', socket => {
         }, 1000)
     })
 
+    socket.on('gasteiDinheiro', data => {
+        usuarios_dinheiro[data.id_usuario] = data.dinheiro
+        console.log('EEENtra aqui')
+        console.log(usuarios_dinheiro)
+    })
+
     socket.on('Clicou_resposta', data => {
-        id_usuarios.push(data)
+        usuarios_dinheiro.push(data)
         socket.broadcast.emit('Nome_do_usuario', data)
     })
 
@@ -124,7 +138,11 @@ io.on('connection', socket => {
                             espera_duas_respostas = []
                             // Condicao para verificar se algum errou
                             if(alguem_errou == true){
-                                pagina = 'menu'
+                                // Acabou o Jogo
+                                if(resposta['resposta'] == 'true'){pagina = 'menu'}
+                                else{pagina = 'sala_de_espera'}
+                                usuarios_nomes = []
+                                usuarios_ids = []
                             }
                             else{
                                 pagina = 'prox_show_multi'
@@ -154,10 +172,17 @@ io.on('connection', socket => {
     socket.on('Troca_pagina_2', data => {
         alguem_errou = false
         for (i in usuario_resposta){
-            if (usuario_resposta[i] == 'false'){alguem_errou = true}
-        }
+            if (usuario_resposta[i] == 'false'){
+                alguem_errou = true; 
+                if(i != data){id_usuario_t = i} 
+            }
+        } 
         if(alguem_errou == true){
-            pagina = 'menu'
+            // Acabou o Jogo
+            if(usuario_resposta[i] == 'true'){pagina = 'menu'}
+            else{pagina = 'sala_de_espera'}
+            usuarios_nomes = []
+            usuarios_ids = []
         }
         else{
             pagina = 'prox_show_multi'
@@ -211,12 +236,21 @@ app.post('/sel-login', function (req, res) {
             req.session.id_usuario = resp_login[0]['dataValues']['id']
             req.session.nome = resp_login[0]['dataValues']['nome']
             req.session.dinheiro = resp_login[0]['dataValues']['dinheiro']
+            usuarios_dinheiro[req.session.id_usuario] = resp_login[0]['dataValues']['dinheiro']
             req.session.pergunta_individual_momento = 0
             // req.session.lista_perguntas_individual = []
             usuario_resposta[req.session.id_usuario] = 0
             // console.log(req.session)
             console.log(usuario_resposta)
             console.log(usuarios_nomes)
+            if (usuarios_ids[0] == req.session.id_usuario){
+                usuarios_nomes[0] = null
+                usuarios_ids[0] = null
+            }
+            if(usuarios_ids[1] == req.session.id_usuario){
+                usuarios_nomes[1] = null
+                usuarios_ids[1] = null
+            }
             // console.log(session.Session)
             res.render('menu');
         }
@@ -246,10 +280,34 @@ var lista_perguntas_individual = []
 // MENU
 app.get('/menu', function (req, res) {
     // zeramos a pergunta do momento quando voltamos pro menu
+    if (usuarios_ids[0] == req.session.id_usuario){
+        usuarios_nomes[0] = null
+        usuarios_ids[0] = null
+    }
+    if(usuarios_ids[1] == req.session.id_usuario){
+        usuarios_nomes[1] = null
+        usuarios_ids[1] = null
+    }
     req.session.pergunta_individual_momento = 0
     res.render('menu')
 })
 
+app.get('/deslogar', function (req, res) {
+    // zeramos a pergunta do momento quando voltamos pro menu
+    res.render('deslogar')
+})
+app.get('/deslogar_solo', function (req, res) {
+    // zeramos seu login do momento que saimos
+    if (usuarios_ids[0] == req.session.id_usuario){
+        usuarios_nomes[0] = null
+        usuarios_ids[0] = null
+    }
+    if(usuarios_ids[1] == req.session.id_usuario){
+        usuarios_nomes[1] = null
+        usuarios_ids[1] = null
+    }
+    res.render('login')
+})
 // Inicio Show
 app.get('/inicio_show', function (req, res) {
     // zeramos a pergunta do momento quando voltamos pro menu
@@ -406,9 +464,19 @@ app.post('/prox-pergunta', function (req, res) {
 
 app.get('/sala_de_espera', function (req, res) {
     // console.log(req.body.id_usuario)
-    usuarios_nomes.push(req.session.nome)
-    usuarios_ids.push(req.session.id_usuario)
-    res.render('sala_de_espera')
+    if (usuarios_ids[0] != req.session.id_usuario){
+        if(usuarios_ids[0] == null){
+            usuarios_nomes[0] = req.session.nome
+            usuarios_ids[0] = req.session.id_usuario     
+        }
+        else if(usuarios_ids[1] != req.session.id_usuario){
+            if(usuarios_ids[1] == null){
+            usuarios_nomes[1] = req.session.nome
+            usuarios_ids[1] = req.session.id_usuario}
+        }
+        console.log(usuarios_nomes)
+    }
+    res.render('sala_de_espera', {dados:{id_usuario: req.session.id_usuario}})
 })
 
 // Inicio Show Multijogador
@@ -419,7 +487,11 @@ app.get('/inicio_show_multi', function (req, res) {
     // zeramos a pergunta do momento quando voltamos pro menu
     espera_duas_respostas = []
     usuario_resposta = {}
-    pergunta_multi_momento = 0
+    pergunta_multi_momento = 0   
+  res.render('inicio_show_multi')
+})
+
+function pega_perguntas_multi(){
     perguntas.findAll({
         // attributes: [[sequelize.fn('COUNT', sequelize.col('dificuldade')), 'dificuldade']],
         where:{
@@ -459,9 +531,8 @@ app.get('/inicio_show_multi', function (req, res) {
         lista_perguntas_multi[7] = dificuldade[1]['dataValues']['id']
         lista_perguntas_multi[8] = dificuldade[2]['dataValues']['id']
         lista_perguntas_multi[9] = dificuldade[3]['dataValues']['id']
-    })    
-  res.render('inicio_show_multi')
-})
+    })
+}
 
 app.get('/prox_show_multi', function (req, res) {
     // Verificamos para a proxima pergunta
@@ -469,6 +540,8 @@ app.get('/prox_show_multi', function (req, res) {
     usuario_resposta = {}
     pergunta_multi_momento = pergunta_multi_momento + 1
     if (pergunta_multi_momento == 10){
+        usuarios_nomes = []
+        usuarios_ids = []
         res.send('Parabens! Voce ganhou!')
     }
     else{
@@ -532,21 +605,17 @@ app.get('/show_multi', function (req, res) {
         usuario_nome_2 = usuarios_nomes[1]
         id_usuario_1 = usuarios_ids[0]
         id_usuario_2 = usuarios_ids[1]
+        dinheiro = usuarios_dinheiro[req.session.id_usuario]
         meu_id = req.session.id_usuario
         console.log(usuario_nome_2, id_usuario_2)
-        // Aqui definimos a numeracao de pergunta:
-        // req.session.lista_perguntas_individual[0] = resp_1
-        // console.log(req.session.lista_perguntas_individual)
-        // pergunta_resposta = lista
-        // lista[0] = a
-        // a['resp_correta'] = resp_correta
-        // pergunta_resposta['dataValues']['id'] = '11'
-        // console.log(pergunta_resposta[0]['dataValues']['pergunta'])
-        // console.log(pergunta_resposta)
-        // res.render('show', {pergunta_resposta: pergunta_resposta})
-        // Funciona:
-        // res.render('teste', {pergunta: ["pergunta", "qweqweqweqwe"]})
-        // res.render('teste', {pergunta: {ola:123, qwe:123}})
+        // Aqui definimos a numeracao de da imagem dancante:
+        aleatorio_1 = Math.floor(Math.random() * 7)
+        if(aleatorio_1 == 1){imagem_dance = "/imagens/clarton.gif"}
+        else if(aleatorio_1 == 2){imagem_dance = "/imagens/patrick.gif"}
+        else if(aleatorio_1 == 3){imagem_dance = "/imagens/snoop.gif"}
+        else if(aleatorio_1 == 4){imagem_dance = "/imagens/jack.gif"}
+        else if(aleatorio_1 == 5){imagem_dance = "/imagens/shrek.gif"}
+        else{imagem_dance = "/imagens/hulk_dancando.gif"}
         res.render('show_multi', {dados: {
                                 pergunta: pergunta,
                                 resp_1: resp_1,
@@ -558,12 +627,14 @@ app.get('/show_multi', function (req, res) {
                                 resp_3_bol: resp_3_bol,
                                 resp_4_bol: resp_4_bol,
                                 dificuldade: dificuldade,
-                                numero_pergunta: numero_pergunta,
+                                numero_pergunta: pergunta_multi_momento + 1,
                                 id_usuario_1: id_usuario_1,
                                 id_usuario_2: id_usuario_2,
                                 meu_id: meu_id,
+                                dinheiro: dinheiro,
                                 usuario_nome_1: usuario_nome_1,
-                                usuario_nome_2: usuario_nome_2
+                                usuario_nome_2: usuario_nome_2,
+                                imagem_dance:imagem_dance
                             }})
     })
 })
@@ -586,6 +657,9 @@ app.get("/comprar.html", function(req, res){
 })
 app.get("/", function(req, res){
     res.render("login")
+})
+app.get("/controle", function(req, res){
+    res.render("controle")
 })
 // Usando o CSS
 app.use('/css/show.css', express.static(__dirname + "/css/show.css"));
@@ -613,6 +687,12 @@ app.use('/imagens/traz.png', express.static(__dirname + "/imagens/traz.png"));
 app.use('/imagens/carregando.gif', express.static(__dirname + "/imagens/carregando.gif"));
 app.use('/imagens/homem_aranha_dancante.gif', express.static(__dirname + "/imagens/homem_aranha_dancante.gif"));
 app.use('/imagens/hulk_dancando.gif', express.static(__dirname + "/imagens/hulk_dancando.gif"));
+app.use('/imagens/clarton.gif', express.static(__dirname + "/imagens/clarton.gif"));
+app.use('/imagens/jack.gif', express.static(__dirname + "/imagens/jack.gif"));
+app.use('/imagens/shrek.gif', express.static(__dirname + "/imagens/shrek.gif"));
+app.use('/imagens/snoop.gif', express.static(__dirname + "/imagens/snoop.gif"));
+app.use('/imagens/patrick.gif', express.static(__dirname + "/imagens/patrick.gif"));
+app.use('/imagens/tempo_3.gif', express.static(__dirname + "/imagens/tempo_3.gif"));
 // Escutando a porta 8080
 var porta = process.env.PORT || 8080;
 server.listen(porta);
