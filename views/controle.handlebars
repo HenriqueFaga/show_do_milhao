@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CHAT</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+</head>
+<body>
+    <form id="chat">
+    <div>
+        <pre>Nesse botao zeramos 
+            var usuario_espera = [null, null]
+            var usuarios_nomes = []
+            var usuarios_ids = []
+        </pre>
+    <button height="300" width="300" border="solid" type="submit">Zerar as Variaveis Globais</button>
+        <p id="zerou"></p>
+    </div>
+    <div class="mensagens"></div>
+    </form>
+    <script type="text/javascript">
+        var socket = io('http://localhost:8080')
+
+        $('#chat').submit(function(event){
+            // para nao enviar o formulario
+            event.preventDefault()
+
+            var messageObject = {
+                ok: 'ok'
+            }
+            window.document.getElementById('zerou').innerHTML = "Variaveis Zeradas"
+            socket.emit('zerarVariaveis', messageObject)
+        })
+    </script>
+    
+</body>
+</html>
