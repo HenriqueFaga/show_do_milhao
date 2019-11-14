@@ -646,7 +646,7 @@ app.get('/show_multi', function (req, res) {
 
 app.get('/controle_pergunta', function (req, res) {
     // Verificamos para a proxima pergunta
-    res.render('pergunta')
+    res.render('controle_pergunta')
 })
 app.post('/adiciona_pergunta', function (req, res) {
     // Verificamos para a proxima pergunta
