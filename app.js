@@ -465,7 +465,7 @@ app.post('/prox-pergunta', function (req, res) {
 app.get('/sala_de_espera', function (req, res) {
     // console.log(req.body.id_usuario)
     if (usuarios_ids[0] != null && usuarios_ids[1] != null){
-        res.send('<script>alert("Jogo em andamento..<br> Espere finalizar para iniciar um novo jogo!");window.history.back();</script>')
+        res.send('<script>alert("Jogo em andamento.. Espere finalizar para iniciar um novo jogo!");window.history.back();</script>')
     }
     else{
         if (usuarios_ids[0] != req.session.id_usuario){
@@ -480,8 +480,8 @@ app.get('/sala_de_espera', function (req, res) {
             }
             console.log(usuarios_nomes)
         }
+        res.render('sala_de_espera', {dados:{id_usuario: req.session.id_usuario}})
     }
-    res.render('sala_de_espera', {dados:{id_usuario: req.session.id_usuario}})
 })
 
 // Inicio Show Multijogador
