@@ -43,6 +43,9 @@ function mouse_click_ajuda(id_ajuda){
                 document.getElementById('resposta_universitario').style = 'display: none;'
                 dinheiro = dinheiro - 100
                 document.getElementById('dinheiro_visivel').innerHTML = dinheiro
+                id_usuario = window.document.getElementById("meu_id").value
+                resposta = {id_usuario: id_usuario, dinheiro: dinheiro}
+                socket.emit('gasteiDinheiro', resposta)
                 ajuda = false
             }
             else{
@@ -58,6 +61,9 @@ function mouse_click_ajuda(id_ajuda){
                 document.getElementById('resposta_universitario').style = 'display: none;'
                 dinheiro = dinheiro - 50
                 document.getElementById('dinheiro_visivel').innerHTML = dinheiro
+                id_usuario = window.document.getElementById("meu_id").value
+                resposta = {id_usuario: id_usuario, dinheiro: dinheiro}
+                socket.emit('gasteiDinheiro', resposta)
                 ajuda = false
                 analise_plateia()
             }
@@ -74,6 +80,9 @@ function mouse_click_ajuda(id_ajuda){
                 document.getElementById('porcento_plateia').style = 'display: none;'
                 dinheiro = dinheiro - 50
                 document.getElementById('dinheiro_visivel').innerHTML = dinheiro
+                id_usuario = window.document.getElementById("meu_id").value
+                resposta = {id_usuario: id_usuario, dinheiro: dinheiro}
+                socket.emit('gasteiDinheiro', resposta)
                 ajuda = false
                 analise_universitarios()
             }
@@ -91,6 +100,9 @@ function mouse_click_ajuda(id_ajuda){
                     document.getElementById('porcento_plateia').style = 'display: none;'
                     dinheiro = dinheiro - 50
                     document.getElementById('dinheiro_visivel').innerHTML = dinheiro
+                    id_usuario = window.document.getElementById("meu_id").value
+                    resposta = {id_usuario: id_usuario, dinheiro: dinheiro}
+                    socket.emit('gasteiDinheiro', resposta)
                     ajuda = false
                     form = document.getElementById('proxima')
                     form.submit()
