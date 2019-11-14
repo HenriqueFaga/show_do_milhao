@@ -660,6 +660,54 @@ app.post('/adiciona_pergunta', function (req, res) {
     })
     res.render('controle_pergunta')
 })
+app.post('/deletar_pergunta', function (req, res) {
+    // Verificamos para a proxima pergunta
+    perguntas.destroy({
+        where:{
+            id: parseInt(req.body.id_pergunta),
+        }
+    })
+    perguntas.findAll({
+        where:{
+        }
+    }).then(function(dados){
+        res.render('controle_deletar_pergunta', {dados: dados})
+    })
+})
+app.get('/controle_deletar_pergunta', function (req, res) {
+    // Verificamos para a proxima pergunta
+    perguntas.findAll({
+        where:{
+        }
+    }).then(function(dados){
+        res.render('controle_deletar_pergunta', {dados: dados})
+    })
+    
+})
+app.post('/deletar_usuario', function (req, res) {
+    // Verificamos para a proxima pergunta
+    usuarios.destroy({
+        where:{
+            id: parseInt(req.body.id_usuario),
+        }
+    })
+    usuarios.findAll({
+        where:{
+        }
+    }).then(function(dados){
+        res.render('controle_deletar_usuario', {dados: dados})
+    })
+})
+app.get('/controle_deletar_usuario', function (req, res) {
+    // Verificamos para a proxima pergunta
+    usuarios.findAll({
+        where:{
+        }
+    }).then(function(dados){
+        res.render('controle_deletar_usuario', {dados: dados})
+    })
+    
+})
 // funcionara no caminho localhost:8080/
 // app.get("/show.html", function(req, res){
 //     res.sendFile(__dirname + "/src/show.html")
