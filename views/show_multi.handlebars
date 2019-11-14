@@ -129,7 +129,7 @@
             // Envia resposta ao servidor
             a = window.document.getElementById('meu_id').value
             b = window.document.getElementById(a)
-            b.innerHTML = resp.innerHTML
+            b.innerHTML = "RESPONDIDO!"
             socket.emit('respostaUsuario', resposta)
             window.document.getElementById('resp_1').style =  "background-color:#6495ed;"
             window.document.getElementById('resp_2').style =  "background-color:#6495ed;"
@@ -143,7 +143,7 @@
             console.log(message.conteudo)
             a = window.document.getElementById(message.id_usuario)
             window.document.getElementById('imagem_dancando').style = "display: block;"
-            a.innerHTML = message.conteudo
+            a.innerHTML = "RESPONDIDO!"
         })
 
         // ACABOU O TEMPO
@@ -157,8 +157,8 @@
             for (i in message){
                a = window.document.getElementById(i)
                 if (message[i] == 'false'){
-                    a.innerHTML = a.innerHTML + '<strong color="green">(ERRADA!)</strong>'}
-                else if(message[i] == 'true'){a.innerHTML = a.innerHTML + '<strong color="read">(CORRETA!)</strong>'}
+                    a.innerHTML = a.innerHTML + '<strong><font color="red">(ERRADA!)</font></strong>'}
+                else if(message[i] == 'true'){a.innerHTML = a.innerHTML + '<strong><font color="green">(CORRETA!)</font></strong>'}
             }
             socket.emit('ababouTempo2', message)
         })
@@ -171,8 +171,8 @@
             for (i in message){
                 a = window.document.getElementById(i)
                 if (message[i] == 'false'){
-                    a.innerHTML = a.innerHTML + '<strong color="green">(ERRADA!)</strong>'}
-                else if(message[i] == 'true'){a.innerHTML = a.innerHTML + '<strong color="read">(CORRETA!)</strong>'}
+                    a.innerHTML = a.innerHTML + '<strong><font color="red">(ERRADA!)</font></strong>'}
+                else if(message[i] == 'true'){a.innerHTML = a.innerHTML + '<strong><font color="green">(CORRETA!)</font></strong>'}
             }
         })
 
