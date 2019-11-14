@@ -140,7 +140,7 @@ io.on('connection', socket => {
                             if(alguem_errou == true){
                                 // Acabou o Jogo
                                 if(resposta['resposta'] == 'true'){pagina = 'menu'}
-                                else{pagina = 'sala_de_espera'}
+                                else{pagina = 'menu'}
                                 usuarios_nomes = []
                                 usuarios_ids = []
                             }
@@ -180,7 +180,7 @@ io.on('connection', socket => {
         if(alguem_errou == true){
             // Acabou o Jogo
             if(usuario_resposta[i] == 'true'){pagina = 'menu'}
-            else{pagina = 'sala_de_espera'}
+            else{pagina = 'menu'}
             usuarios_nomes = []
             usuarios_ids = []
         }
@@ -464,17 +464,22 @@ app.post('/prox-pergunta', function (req, res) {
 
 app.get('/sala_de_espera', function (req, res) {
     // console.log(req.body.id_usuario)
-    if (usuarios_ids[0] != req.session.id_usuario){
-        if(usuarios_ids[0] == null){
-            usuarios_nomes[0] = req.session.nome
-            usuarios_ids[0] = req.session.id_usuario     
+    if (usuarios_ids[0] != null && usuarios_ids[1] != null){
+        res.send('<script>alert("Jogo em andamento..<br> Espere finalizar para iniciar um novo jogo!");window.history.back();</script>')
+    }
+    else{
+        if (usuarios_ids[0] != req.session.id_usuario){
+            if(usuarios_ids[0] == null){
+                usuarios_nomes[0] = req.session.nome
+                usuarios_ids[0] = req.session.id_usuario     
+            }
+            else if(usuarios_ids[1] != req.session.id_usuario){
+                if(usuarios_ids[1] == null){
+                usuarios_nomes[1] = req.session.nome
+                usuarios_ids[1] = req.session.id_usuario}
+            }
+            console.log(usuarios_nomes)
         }
-        else if(usuarios_ids[1] != req.session.id_usuario){
-            if(usuarios_ids[1] == null){
-            usuarios_nomes[1] = req.session.nome
-            usuarios_ids[1] = req.session.id_usuario}
-        }
-        console.log(usuarios_nomes)
     }
     res.render('sala_de_espera', {dados:{id_usuario: req.session.id_usuario}})
 })
