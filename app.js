@@ -644,6 +644,22 @@ app.get('/show_multi', function (req, res) {
     })
 })
 
+app.get('/controle_pergunta', function (req, res) {
+    // Verificamos para a proxima pergunta
+    res.render('pergunta')
+})
+app.post('/adiciona_pergunta', function (req, res) {
+    // Verificamos para a proxima pergunta
+    perguntas.create({
+        pergunta: req.body.pergunta,
+        resp_correta: req.body.resp_correta,
+        resp_incorreta_1: req.body.resp_incorreta_1,
+        resp_incorreta_2: req.body.resp_incorreta_2,
+        resp_incorreta_3: req.body.resp_incorreta_3,
+        dificuldade: parseInt(req.body.dificuldade)
+    })
+    res.render('controle_pergunta')
+})
 // funcionara no caminho localhost:8080/
 // app.get("/show.html", function(req, res){
 //     res.sendFile(__dirname + "/src/show.html")
