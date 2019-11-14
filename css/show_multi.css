@@ -168,20 +168,7 @@ div.interativa{
     /*position: absolute;*/
     float:left;
     width: 528px;
-    height: 250px;
-    padding:10px;
-    background-color:#fff9e5;
-    border-radius: 10px;
-    border-width: 2px;
-    border-color:#000000;
-    border-style: solid;
-    /*align-content: left;*/
-}
-div.chat{
-    /*position: absolute;*/
-    float:left;
-    width: 528px;
-    height: 96px;
+    height: 380px;
     padding:10px;
     background-color:#fff9e5;
     border-radius: 10px;
@@ -277,8 +264,3 @@ div#errou_voltar{
 }
 div#errou_voltar:hover{cursor: pointer;}
 div#errou_voltar:hover{background-color: #ffff66;}
-
-div#imagem_dancando{
-    float:right;
-    width:100px;
-}
