@@ -7,7 +7,7 @@
         div.tela_login{
             float:center;
             width: 400px;
-            height: 230px;
+            height: 300px;
             border: solid;
             border-radius: 10px;
             padding: 35px;
@@ -42,17 +42,22 @@
             window.location = 'inicio_show'
         }
         function jogar_2(){
-            f = document.getElementById('form_menu')
-            f.setAttribute('action',"inicio_show_multi");
-            f.submit()
+            // f = document.getElementById('form_menu')
+            // f.setAttribute('action',"inicio_show_multi");
+            // f.submit()
+            window.location = 'sala_de_espera'
         }
         function comprar(){
-            window.location = 'sala_de_espera'
+            // window.location = 'sala_de_espera'
+            return null
+        }
+        function sair(){
+            window.location = "deslogar"
         }
     </script>
 </head>
 <body align="center">
-    <form id="form_menu" method=POST" action="">
+    <form id="form_menu" method="POST" action="">
     {{#with dados}}
     <input type="hidden" name="id_usuario" value="{{id_usuario}}">
     {{/with}}
@@ -63,11 +68,12 @@
         </div>
         <div class="d-flex justify-content-center">
             <div class="tela_login" align="center">
-                <button class="btn btn-primary btn-lg btn-block" type="button" onclick="jogar_sozinho()">Jogar Sozinho</button>
+                <button class="btn btn-primary btn-lg btn-block" type="button" onclick="jogar_sozinho()">Treinamento</button>
                 </br>
                 <button class="btn btn-primary btn-lg btn-block" type="button" onclick="jogar_2()">Jogar 1 vs 1</button>
                 </br>
-                <button class="btn btn-warning btn-lg btn-block" type="button" onclick="comprar()">Comprar Moedas</button>
+                <button class="btn btn-warning btn-lg btn-block" type="button" onclick="comprar()">Comprar Moedas</button></br>
+                <button class="btn btn-success btn-lg btn-block" type="button" onclick="sair()">Sair do Jogo</button>
             </div>
         </div>
     </div>
