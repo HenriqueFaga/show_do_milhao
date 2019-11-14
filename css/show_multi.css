@@ -156,6 +156,19 @@ div.ajuda{
     font-weight:bold;
 }
 div.ajuda:hover{background-color: #ffff66;}
+div.tempo{
+    /*position: absolute;*/
+    float:left;
+    padding:25px;
+    padding-bottom:5px;
+    width:70px;
+    border-radius: 10px;
+    border-width: 2px;
+    border-color:#000000;
+    border-style: solid;
+    background-color:#ff9999;
+    font-weight:bold;
+}
 div.espacamento_horizonzal{
     float:left;
     /*definimos a largura do box*/
@@ -168,7 +181,20 @@ div.interativa{
     /*position: absolute;*/
     float:left;
     width: 528px;
-    height: 380px;
+    height: 250px;
+    padding:10px;
+    background-color:#fff9e5;
+    border-radius: 10px;
+    border-width: 2px;
+    border-color:#000000;
+    border-style: solid;
+    /*align-content: left;*/
+}
+div.chat{
+    /*position: absolute;*/
+    float:left;
+    width: 528px;
+    height: 96px;
     padding:10px;
     background-color:#fff9e5;
     border-radius: 10px;
@@ -264,3 +290,8 @@ div#errou_voltar{
 }
 div#errou_voltar:hover{cursor: pointer;}
 div#errou_voltar:hover{background-color: #ffff66;}
+
+div#imagem_dancando{
+    float:right;
+    width:100px;
+}
