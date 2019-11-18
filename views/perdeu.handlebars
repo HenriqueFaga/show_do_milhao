@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Voce Ganhou meu Parceiro!</title>
+    <script type="text/javascript">
+        a = 0
+        b = setInterval(function(){
+            a += 1
+            if(a == 3){
+                clearInterval(b)
+                a = 0
+                window.location = "menu"
+            }
+        }, 1000)
+    </script>
+</head>
+<body align="center" style="background-color: black;">
+    <img src="/imagens/game_over.jpg" width="700px" height="500px">
+</body>
+</html>
