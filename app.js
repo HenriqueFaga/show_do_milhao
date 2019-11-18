@@ -35,7 +35,21 @@ var usuario_espera = [null, null]
 var usuarios_nomes = []
 var usuarios_ids = []
 var usuarios_dinheiro = []
-pronto_para_jogo = false
+var set_intervalo = false
+var tempo = 0
+// pronto_para_jogo = false
+
+b = setInterval(function(){
+    // socket.broadcast.emit('recebeCrono', a / 1)
+    tempo += 1
+    // console.log(tempo)
+    if(tempo == 60){
+        // clearInterval(b)
+        tempo = "Acabou o Tempo!"
+        tempo = 0
+    }
+}, 1000)
+
 io.on('connection', socket => {
     console.log(`Socket conectado! ${socket.id}`)
     socket.on('zerarVariaveis', data => {
@@ -66,32 +80,8 @@ io.on('connection', socket => {
         pega_perguntas_multi()
         socket.broadcast.emit('eba_eu_vou', data)
     })
-    // if (quant_usuarios[0] == 0){
-    //     quant_usuarios[0] = socket.id
-
-    // }
-    // else if (quant_usuarios[1] == 0){
-    //     quant_usuarios[0] = socket.id
-    //     pronto_para_jogo = true
-    //     res.redirect('/show_multi');
-    // }
 
     socket.emit('previousMessages', messages)
-
-    socket.on('crono_seg', data => {
-        console.log(data)
-        a = 0
-        b = setInterval(function(){
-            socket.broadcast.emit('recebeCrono', a / 1)
-            a += 1
-            if(a == 30){
-                clearInterval(b)
-                a = "Acabou o Tempo!"
-                socket.broadcast.emit('acabouTempo', a)
-                a = 0
-            }
-        }, 1000)
-    })
 
     socket.on('gasteiDinheiro', data => {
         usuarios_dinheiro[data.id_usuario] = data.dinheiro
@@ -131,6 +121,7 @@ io.on('connection', socket => {
                             retorno[i] = usuario_resposta[i]
                             // Condicao para verificar se algum errou
                             if (usuario_resposta[i] == 'false'){alguem_errou = true}
+                            if(i != resposta['id_usuario']){resp_outro_usuario=usuario_resposta[i]}
                         }
                         console.log(retorno)
                         socket.broadcast.emit('acabouTempo', retorno)
@@ -139,8 +130,9 @@ io.on('connection', socket => {
                             // Condicao para verificar se algum errou
                             if(alguem_errou == true){
                                 // Acabou o Jogo
-                                if(resposta['resposta'] == 'true'){pagina = 'menu'}
-                                else{pagina = 'menu'}
+                                // Lembre-se o outro quem recebe a resposta
+                                if(resp_outro_usuario == 'true'){pagina = 'ganhou'}
+                                else{pagina = 'perdeu'}
                                 usuarios_nomes = []
                                 usuarios_ids = []
                             }
@@ -149,6 +141,7 @@ io.on('connection', socket => {
                             }
                             clearInterval(time2);
                             pergunta_multi_momento = pergunta_multi_momento + 1
+                            tempo = 0
                             socket.broadcast.emit('Troca_pagina', pagina)
                         }, 1000)
                         a = 0
@@ -172,16 +165,22 @@ io.on('connection', socket => {
     })
     socket.on('Troca_pagina_2', data => {
         alguem_errou = false
+        a = 0
+        id_usuario_t = 0
         for (i in usuario_resposta){
             if (usuario_resposta[i] == 'false'){
-                alguem_errou = true; 
-                if(i != data){id_usuario_t = i} 
+                alguem_errou = true;
+                console.log(i)
+                console.log(data)
+                // a = a + 1
             }
+             if(parseInt(i) != parseInt(data)){id_usuario_t = i; console.log('Olaaaa')}
         } 
+        console.log(id_usuario_t)
         if(alguem_errou == true){
             // Acabou o Jogo
-            if(usuario_resposta[i] == 'true'){pagina = 'menu'}
-            else{pagina = 'menu'}
+            if(usuario_resposta[id_usuario_t] == 'true'){pagina = 'ganhou'}
+            else{pagina = 'perdeu'}
             usuarios_nomes = []
             usuarios_ids = []
         }
@@ -189,7 +188,8 @@ io.on('connection', socket => {
             pagina = 'prox_show_multi'
         }
         espera_duas_respostas = []
-        console.log(espera_duas_respostas)
+        // console.log(espera_duas_respostas)
+        set_intervalo = true
         socket.broadcast.emit('Troca_minha_pagina', pagina)
     })
     socket.on('sendMessage', data => {
@@ -240,7 +240,7 @@ app.post('/sel-login', function (req, res) {
             usuarios_dinheiro[req.session.id_usuario] = resp_login[0]['dataValues']['dinheiro']
             req.session.pergunta_individual_momento = 0
             // req.session.lista_perguntas_individual = []
-            usuario_resposta[req.session.id_usuario] = 0
+            // usuario_resposta[req.session.id_usuario] = 0
             // console.log(req.session)
             console.log(usuario_resposta)
             console.log(usuarios_nomes)
@@ -270,7 +270,7 @@ app.post('/add-cadastro', function (req, res) {
         nome: req.body.nome,
         email: req.body.email,
         senha: req.body.senha,
-        dinheiro: 100
+        dinheiro: 500
     })
     res.redirect('/login');
 })
@@ -361,7 +361,7 @@ app.get('/prox_show', function (req, res) {
     // Verificamos para a proxima pergunta
     req.session.pergunta_individual_momento = req.session.pergunta_individual_momento + 1
     if (req.session.pergunta_individual_momento == 10){
-        res.send('Parabens! Voce ganhou!')
+        res.render('campeao')
     }
     else{
         res.render('prox_show')
@@ -481,6 +481,7 @@ app.get('/sala_de_espera', function (req, res) {
             }
             console.log(usuarios_nomes)
         }
+        console.log(usuarios_nomes)
         res.render('sala_de_espera', {dados:{id_usuario: req.session.id_usuario}})
     }
 })
@@ -540,6 +541,19 @@ function pega_perguntas_multi(){
     })
 }
 
+// function roda_tempo(){
+//     b = setInterval(function(){
+//         // socket.broadcast.emit('recebeCrono', a / 1)
+//         tempo += 1
+//         console.log(tempo)
+//         if(tempo == 60){
+//             clearInterval(b)
+//             tempo = "Acabou o Tempo!"
+//             tempo = 0
+//         }
+//     }, 1000)
+// }
+
 app.get('/prox_show_multi', function (req, res) {
     // Verificamos para a proxima pergunta
     espera_duas_respostas = []
@@ -547,9 +561,11 @@ app.get('/prox_show_multi', function (req, res) {
     if (pergunta_multi_momento == 10){
         usuarios_nomes = []
         usuarios_ids = []
-        res.send('Parabens! Voce ganhou!')
+        res.render('campeao')
     }
     else{
+        tempo = 0
+        // roda_tempo()
         res.render('prox_show_multi')
     }
 })
@@ -639,11 +655,27 @@ app.get('/show_multi', function (req, res) {
                                 dinheiro: dinheiro,
                                 usuario_nome_1: usuario_nome_1,
                                 usuario_nome_2: usuario_nome_2,
-                                imagem_dance:imagem_dance
+                                imagem_dance:imagem_dance,
+                                tempo: tempo
                             }})
     })
 })
-
+app.get('/ganhou', function (req, res) {
+    // Verificamos para a proxima pergunta
+    res.render('ganhou')
+})
+app.get('/perdeu', function (req, res) {
+    // Verificamos para a proxima pergunta
+    res.render('perdeu')
+})
+app.get('/samara', function (req, res) {
+    // Verificamos para a proxima pergunta
+    res.render('samara')
+})
+app.get('/campeao', function (req, res) {
+    // Verificamos para a proxima pergunta
+    res.render('campeao')
+})
 app.get('/controle_pergunta', function (req, res) {
     // Verificamos para a proxima pergunta
     res.render('controle_pergunta')
@@ -762,6 +794,10 @@ app.use('/imagens/shrek.gif', express.static(__dirname + "/imagens/shrek.gif"));
 app.use('/imagens/snoop.gif', express.static(__dirname + "/imagens/snoop.gif"));
 app.use('/imagens/patrick.gif', express.static(__dirname + "/imagens/patrick.gif"));
 app.use('/imagens/tempo_3.gif', express.static(__dirname + "/imagens/tempo_3.gif"));
+app.use('/imagens/chuck_norris_joinha.jpg', express.static(__dirname + "/imagens/chuck_norris_joinha.jpg"));
+app.use('/imagens/game_over.jpg', express.static(__dirname + "/imagens/game_over.jpg"));
+app.use('/imagens/samara.jpeg', express.static(__dirname + "/imagens/samara.jpeg"));
+app.use('/imagens/ser_milionario1.jpg', express.static(__dirname + "/imagens/ser_milionario1.jpg"));
 // Escutando a porta 8080
 var porta = process.env.PORT || 8080;
 server.listen(porta);
