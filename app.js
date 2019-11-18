@@ -77,6 +77,7 @@ io.on('connection', socket => {
     })
 
     socket.on('vem_vc_tambem', data => {
+        tempo = 0
         pega_perguntas_multi()
         socket.broadcast.emit('eba_eu_vou', data)
     })
