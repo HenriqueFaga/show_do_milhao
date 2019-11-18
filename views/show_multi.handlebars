@@ -53,8 +53,8 @@
                             <div class="padding_vertical"><div class="valor_ajuda">$50</div></div>
                         </div>
                         <div class="espacamento_horizonzal"></div>
-                        <div class="tempo" id="tempo" value="3" align="center">
-                            <strong><font size="6">30<br></font></strong>
+                        <div class="tempo" value="3" align="center">
+                            <strong><font size="6"><div id="mudar_tempo">-<br></div></font></strong>
                             <img src="imagens/tempo_3.gif" height="60px" width="60px">
                         </div>
                     </div>
@@ -100,6 +100,7 @@
                         <div id="imagem_dancando" style="display: none;"><img height="170" width="150px" src="{{imagem_dance}}"></div>
                     </div>
                     <input type="hidden" id="meu_id" name="meu_id" value="{{meu_id}}">
+                    <input type="text" id="tempo" name="tempo" value="{{tempo}}">
                     <div class="espacamento_branco"></div>
 <!--                     <div class="quadro_parar" align="center">
                         <div class="parar" align="center" onclick="funcao_parar()"><font color="black">PARAR</font></div>
@@ -120,6 +121,7 @@
 {{/with}}
     <script type="text/javascript">
         var socket = io('https://showdovitao.herokuapp.com/')
+        var resp = null
         function mouse_click(resposta){
             resp = window.document.getElementById(resposta.id)
             r = resp.getAttribute('value')
@@ -187,6 +189,42 @@
             // console.log(message.conteudo)
             window.location = message
         })
+
+        //conexao 
+        // socket.emit('crono_seg', teste=true)
+        // socket.on('recebeCrono', function(message){
+        //     tempo = document.getElementById("mudar_tempo")
+        //     tempo.innerHTML = message
+        //     console.log(message)
+        // })
+        tempo_cont = parseInt(window.document.getElementById('tempo').value)
+        b = setInterval(function(){
+            tempo = document.getElementById("mudar_tempo")
+            // console.log(message)
+            // socket.broadcast.emit('recebeCrono', a / 1)
+            tempo.innerHTML = 60 - tempo_cont  
+            tempo_cont += 1
+            if(tempo_cont == 60){
+                clearInterval(b)
+                tempo = "Acabou o Tempo!"
+                tempo.innerHTML = tempo_cont
+                if(resp){
+                    if(resp.getAttribute('value') == 'false'){
+                        // Mostramos a samara
+                        window.location = "samara"
+                    }
+                    else{
+                        window.location = "ganhou"
+                    }
+                }
+                else{
+                    // Mostramos a samara
+                    window.location = "samara"
+                }
+                // socket.broadcast.emit('acabouTempo_medo', tempo)
+                tempo_cont = 0
+            }
+        }, 1000)
     </script>
 </body>
 </html>
