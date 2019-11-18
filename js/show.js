@@ -359,6 +359,6 @@ function mouse_click_carta(img){
 function funcao_parar(){
     var a = confirm('Deseja realmente parar o jogo?')
     if(a){
-        window.location = 'menu.html'
+        window.location = 'menu'
     }
 }
