@@ -112,7 +112,7 @@ io.on('connection', socket => {
                 a = 0
                 time1 = setInterval(function(){
                     a += 1
-                    if(a == 3){
+                    if(a == 2){
                         retorno = {}
                         alguem_errou = false
                         for (i in usuario_resposta){
