@@ -235,26 +235,31 @@ app.post('/sel-login', function (req, res) {
         }
         else{
             // res.send('Login Valido')
-            req.session.id_usuario = resp_login[0]['dataValues']['id']
-            req.session.nome = resp_login[0]['dataValues']['nome']
-            req.session.dinheiro = resp_login[0]['dataValues']['dinheiro']
-            usuarios_dinheiro[req.session.id_usuario] = resp_login[0]['dataValues']['dinheiro']
-            req.session.pergunta_individual_momento = 0
-            // req.session.lista_perguntas_individual = []
-            // usuario_resposta[req.session.id_usuario] = 0
-            // console.log(req.session)
-            console.log(usuario_resposta)
-            console.log(usuarios_nomes)
-            if (usuarios_ids[0] == req.session.id_usuario){
-                usuarios_nomes[0] = null
-                usuarios_ids[0] = null
+            if(req.body.nome = "admin" && req.body.senha == "admin"){
+                res.render('controle_pergunta');
             }
-            if(usuarios_ids[1] == req.session.id_usuario){
-                usuarios_nomes[1] = null
-                usuarios_ids[1] = null
+            else{
+                req.session.id_usuario = resp_login[0]['dataValues']['id']
+                req.session.nome = resp_login[0]['dataValues']['nome']
+                req.session.dinheiro = resp_login[0]['dataValues']['dinheiro']
+                usuarios_dinheiro[req.session.id_usuario] = resp_login[0]['dataValues']['dinheiro']
+                req.session.pergunta_individual_momento = 0
+                // req.session.lista_perguntas_individual = []
+                // usuario_resposta[req.session.id_usuario] = 0
+                // console.log(req.session)
+                console.log(usuario_resposta)
+                console.log(usuarios_nomes)
+                if (usuarios_ids[0] == req.session.id_usuario){
+                    usuarios_nomes[0] = null
+                    usuarios_ids[0] = null
+                }
+                if(usuarios_ids[1] == req.session.id_usuario){
+                    usuarios_nomes[1] = null
+                    usuarios_ids[1] = null
+                }
+                // console.log(session.Session)
+                res.render('menu');
             }
-            // console.log(session.Session)
-            res.render('menu');
         }
     })
 })
