@@ -3,6 +3,9 @@
 <head>
     <title>Adicionar Pergunta no banco</title>
     <script type="text/javascript">
+        function deletar(){
+            window.location = "controle_deletar_pergunta"
+        }
     </script>
 </head>
 <body>
@@ -22,5 +25,7 @@
     <input type="text" name="dificuldade" value="">
     <input type="submit" name="adicona" value="Adicionar Pergunta">
     </form>
+    <br>
+    <input type="button" name="remover" value="Deletar alguma Pergunta" onclick="deletar()">
 </body>
 </html>
